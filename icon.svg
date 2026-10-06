@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+          <defs>
+            <linearGradient id="smBg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6cb9ff"/><stop offset="1" stop-color="#0a6de8"/>
+            </linearGradient>
+            <linearGradient id="smSheen" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff" stop-opacity=".45"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="url(#smBg)"/>
+          <rect x="1.5" y="1.5" width="45" height="22" rx="11" fill="url(#smSheen)"/>
+          <clipPath id="smEnvClip"><rect x="8.5" y="13.5" width="31" height="21" rx="3.5"></rect></clipPath>
+          <rect x="8.5" y="13.5" width="31" height="21" rx="3.5" fill="#ffffff"/>
+          <g clip-path="url(#smEnvClip)">
+            <path d="M1 2 L47 2 L47 7.2 L24 26.5 L1 7.2 Z" fill="#f2f6fc"/>
+            <path d="M1 7.2 L24 26.5 L47 7.2" fill="none" stroke="#bcd9f7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M1 38.5 L21.2 27.8 M47 38.5 L26.8 27.8" fill="none" stroke="#d3e5f9" stroke-width="1.4" stroke-linecap="round"/>
+          </g>
+          <text x="24" y="28.6" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif" font-size="12.5" font-weight="800" fill="#0a6de8">S</text>
+        </svg>
