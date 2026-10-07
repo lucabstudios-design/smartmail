@@ -1018,6 +1018,18 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 #gistPop,.pop-menu,.gist-pop,.dd-menu{z-index:300!important}
 #toasts{z-index:320!important}
 .ge-wrap{z-index:80}
+.auth-pill{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:95;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:#fff7ec;color:#b35600;font-size:13px;font-weight:700;border:1px solid rgba(255,149,0,.35);box-shadow:0 12px 30px -12px rgba(150,80,0,.45);animation:authIn .35s var(--fluid)}
+.auth-pill:hover{background:#ffefd9}
+.auth-dot{width:7px;height:7px;border-radius:50%;background:#ff9500;box-shadow:0 0 0 3px rgba(255,149,0,.2)}
+@keyframes authIn{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translateX(-50%)}}
+.sync-stat{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:5px 10px 5px 8px;border-radius:999px;color:var(--muted);font-size:11.5px;font-weight:600;flex:none;transition:background .2s,color .2s;white-space:nowrap}
+.sync-stat:hover{background:var(--subtle);color:var(--accent)}
+.sync-stat .ss-ico{display:grid;place-items:center}
+.sync-stat.spin .ss-ico{animation:ssSpin 1s linear infinite;color:var(--accent)}
+.sync-stat.paused{color:#c25e00}
+@keyframes ssSpin{to{transform:rotate(360deg)}}
+@media (max-width:1100px){.sync-stat .ss-last{display:none}}
+@media (max-width:760px){.sync-stat .ss-txt{display:none}.sync-stat{margin-left:4px;padding:6px}}
 </style>
 
 <div class="app" id="app">
@@ -1104,6 +1116,7 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 'use strict';
 /* ============ ICONS (A1 hairline set) ============ */
 const PATHS={
+  refresh:'<path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><path d="M20 20.5V16h-4.5"/>',
   heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
   dumbbell:'<path d="M6.5 7.5v9M3.5 10v4M17.5 7.5v9M20.5 10v4M6.5 12h11"/>',
   music:'<path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
@@ -1912,7 +1925,7 @@ function renderListInner(){
       :f==='done'?'Nothing marked done yet. When you\'ve read and dealt with an email, tick it — it tucks away here, never deleted.'
       :f==='spam'?'No spam. Scams and unwanted senders go here, still kept in case something real slips in.'
       :f==='bin'?'Bin is empty. Things you bin stay here for good unless you empty it yourself.'
-      :(Gmail.on&&!Gmail.ready?'Loading your mail from Gmail…':'No emails here'+(state.search?' matching "'+esc(state.search)+'"':'')+'.');
+      :(Gmail.loadingLocal?'Opening your mail…':Gmail.on&&!Gmail.ready?'Loading your mail from Gmail…':'No emails here'+(state.search?' matching "'+esc(state.search)+'"':'')+'.');
     $('listScroll').innerHTML=`<div class="empty">${msg}</div>`;
     return;
   }
@@ -3468,9 +3481,43 @@ const Gmail={
     return new Promise((res,rej)=>{
       const tc=google.accounts.oauth2.initTokenClient({client_id:this.clientId,scope:this.SCOPES,hint:hint||undefined,
         callback:r=>{if(r&&r.access_token)res({token:r.access_token,exp:Date.now()+(r.expires_in||3600)*1000-60000});else rej(new Error((r&&r.error_description)||r&&r.error||'Sign-in was cancelled'));},
-        error_callback:e=>rej(new Error(e&&e.message||'Sign-in window was closed'))});
+        error_callback:e=>{const x=new Error(e&&e.message||'Sign-in window was closed');x.popup=e&&/popup/i.test((e.type||'')+' '+(e.message||''));rej(x);}});
       tc.requestAccessToken({prompt:interactive?'select_account consent':''});
     });
+  },
+  // Google hands out 1-hour passes. Renewing one opens a tiny Google window that
+  // closes by itself. Chrome only allows that window after a click, unless
+  // pop-ups are allowed for SmartMail, so: renew on a timer when we can, on
+  // your next click when we can't, and pause downloads (nothing lost) until then.
+  async ensureToken(acc){
+    if(acc.token&&Date.now()<acc.exp-30000)return true;
+    if(acc._refreshing)return acc._refreshing;
+    acc._refreshing=(async()=>{
+      try{const t=await this.token(acc.email,false);Object.assign(acc,t);acc.needsTap=false;this.save();this.paintAuth();setTimeout(()=>this.resumeAll(),50);return true;}
+      catch(e){acc.needsTap=true;this.paintAuth();return false;}
+      finally{acc._refreshing=null;}
+    })();
+    return acc._refreshing;
+  },
+  gestureRefresh(){
+    const acc=this.accounts.find(a=>a.needsTap||Date.now()>a.exp-10*60000);
+    if(!acc||acc._refreshing||Date.now()-(this._lastG||0)<15000)return;
+    this._lastG=Date.now();acc.exp=0;this.ensureToken(acc);
+  },
+  keepAlive(){
+    clearInterval(this._ka);
+    this._ka=setInterval(()=>{this.accounts.forEach(a=>{if(!a.needsTap&&Date.now()>a.exp-5*60000)this.ensureToken(a);});},60000);
+  },
+  resumeAll(){
+    this.accounts.forEach(a=>{if(a.needsTap)return;const S=this.sync[a.id];if(!S||(!S.done&&!S.running))this.backfill(a);});
+    this.refresh();
+  },
+  paintAuth(){
+    const need=this.accounts.filter(a=>a.needsTap);let el=$('authPill');
+    if(!need.length){if(el)el.remove();return;}
+    if(!el){el=document.createElement('button');el.id='authPill';el.className='auth-pill';el.dataset.tip='Paused|Google asks SmartMail to confirm you are still signed in every hour. Click to carry on. To make this automatic, allow pop-ups for SmartMail (Settings → Connect Gmail explains how).';document.body.appendChild(el);
+      el.onclick=()=>{const a=this.accounts.find(x=>x.needsTap);if(a){a.exp=0;this.ensureToken(a);}};}
+    el.innerHTML=`<span class="auth-dot"></span>Gmail paused · click to carry on`;
   },
   async addAccount(){
     if(!this.clientId){toast('Paste your Google Client ID first','bell','Settings → Connect Gmail');return;}
@@ -3523,6 +3570,7 @@ const Gmail={
       await this.pace(acc,this.cost(path,opts));
       try{const out=await this.api1(acc,path,opts);acc._ok=(acc._ok||0)+1;if(acc._ok%40===0)acc._rate=Math.min(240,(acc._rate||100)*1.12);return out;}
       catch(err){
+        if(err.auth)throw err;
         const busy=err.status===429||(err.status===403&&/rate|quota|limit/i.test(err.message))||err.status>=500||err.network;
         const unsafe=/messages\/send/.test(path)&&!(err.status===429||err.status===403);
         if(!busy||unsafe||attempt>=7)throw err;
@@ -3536,10 +3584,10 @@ const Gmail={
   },
   slowNote(acc,wait){const S=this.sync[acc.id];if(S){S.slow=Date.now()+wait;this.paintProgress();}},
   async api1(acc,path,opts){
-    if(Date.now()>acc.exp){try{const t=await this.token(acc.email,false);Object.assign(acc,t);this.save();}catch(e){}}
+    if(!(await this.ensureToken(acc))){const x=new Error('Waiting for you to confirm Google sign-in');x.auth=true;throw x;}
     const go=async()=>fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,Object.assign({},opts,{headers:Object.assign({Authorization:'Bearer '+acc.token,'Content-Type':'application/json'},opts.headers||{})}));
     let r;try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}
-    if(r.status===401){const t=await this.token(acc.email,false);Object.assign(acc,t);this.save();try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}}
+    if(r.status===401){acc.exp=0;if(!(await this.ensureToken(acc))){const x=new Error('Waiting for you to confirm Google sign-in');x.auth=true;throw x;}try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}}
     if(!r.ok){let msg='Gmail error '+r.status;try{const j=await r.json();msg=(j.error&&j.error.message)||msg;}catch(e){}const x=new Error(msg);x.status=r.status;throw x;}
     if(r.status===204)return null;
     return r.json();
@@ -3687,6 +3735,7 @@ const Gmail={
       if(S.done)toast('All of '+acc.email+' is on this device','tick',S.fetched.toLocaleString()+' emails. New ones arrive as they come.');
     }catch(err){
       S.error=err.message;
+      if(err.auth){S.running=false;this.paintProgress();return;}
       if(!S.warned){S.warned=true;toast('Download paused for '+acc.email,'bell','Gmail asked SmartMail to slow down. It will pick up again by itself in a minute, nothing is skipped.');}
       clearTimeout(S.retryT);S.retryT=setTimeout(()=>{S.retryT=null;if(this.accounts.includes(acc))this.backfill(acc);},60000);
     }
@@ -3764,13 +3813,37 @@ const Gmail={
     const r=await this.api(acc,'messages/send',{method:'POST',body:JSON.stringify(body)});
     return r;
   },
-  async refresh(){
-    if(!this.on||this.busy)return;this.busy=true;
-    try{for(const acc of this.accounts){await this.fetchAccount(acc,false);}}catch(e){console.warn(e);}
-    this.busy=false;
+  async refresh(manual){
+    if(!this.on)return;
+    if(this.busy){if(manual)this._again=true;return;}
+    this.busy=true;this.paintStatus();
+    let ok=0;
+    for(const acc of this.accounts){if(acc.needsTap)continue;try{await this.fetchAccount(acc,false);ok++;}catch(e){console.warn(e);}}
+    if(ok)this.lastCheck=Date.now();
+    this.busy=false;this.paintStatus();
+    if(manual&&!ok&&this.accounts.some(a=>a.needsTap))toast('Gmail is paused','bell','Click the orange bar at the bottom to carry on.');
+    if(this._again){this._again=false;this.refresh();}
+  },
+  paintStatus(){
+    if(!this.on)return;
+    let el=$('syncStat');
+    if(!el){
+      el=document.createElement('button');el.id='syncStat';el.className='sync-stat';
+      $('listTitle').insertAdjacentElement('afterend',el);
+      el.onclick=()=>{const a=this.accounts.find(x=>x.needsTap);if(a){a.exp=0;this.ensureToken(a).then(okk=>{if(okk)this.refresh(true);});}else this.refresh(true);};
+    }
+    const ago=t=>{if(!t)return '';const s=Math.round((Date.now()-t)/1000);return s<10?'just now':s<60?s+'s ago':s<3600?Math.floor(s/60)+' min ago':Math.floor(s/3600)+' h ago';};
+    const paused=this.accounts.length&&this.accounts.every(a=>a.needsTap);
+    const last=EMAILS.reduce((m,e)=>(e.gid&&!e.me&&e.ts>m?e.ts:m),0);
+    const lastTxt=last?(()=>{const d=new Date(last),n=new Date();const hm=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});return d.toDateString()===n.toDateString()?hm:d.toLocaleDateString([],{day:'numeric',month:'short'})+' '+hm;})():'';
+    el.classList.toggle('spin',!!this.busy);el.classList.toggle('paused',!!paused);
+    el.innerHTML=`<span class="ss-ico">${ic('refresh',13)}</span><span class="ss-txt">${this.busy?'Checking…':paused?'Paused':this.lastCheck?'Updated '+ago(this.lastCheck):'Not checked yet'}</span>${lastTxt?`<span class="ss-last">· newest ${lastTxt}</span>`:''}`;
+    el.dataset.tip='Refresh|'+(lastTxt?'Newest email arrived at '+lastTxt+'. ':'')+'SmartMail checks Gmail every 45 seconds and whenever you come back to the window. Click to check now.';
+    el.setAttribute('aria-label','Refresh mail. '+(this.lastCheck?'Updated '+ago(this.lastCheck):''));
   },
   start(){
     if(!this.on)return;
+    clearInterval(this._st);this._st=setInterval(()=>this.paintStatus(),10000);this.paintStatus();
     clearInterval(this.pollTimer);this.pollTimer=setInterval(()=>this.refresh(),45000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)this.refresh();});
   },
@@ -3778,12 +3851,12 @@ const Gmail={
     this.load();
     if(!this.on)return false;
     this.syncAccountsList();
-    EMAILS.length=0;
-    try{const saved=await Store.all();const ids=new Set(this.accounts.map(a=>a.id));saved.filter(e=>ids.has(e.account)).forEach(e=>EMAILS.push(mk(e)));EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));}catch(e){console.warn('store',e);}
-    renderAll();
+    this.loadingLocal=true;renderAll();
+    try{const saved=await Store.all();EMAILS.length=0;const ids=new Set(this.accounts.map(a=>a.id));saved.filter(e=>ids.has(e.account)).forEach(e=>EMAILS.push(mk(e)));EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));}catch(e){console.warn('store',e);}
+    this.loadingLocal=false;renderAll();this.keepAlive();
     for(const acc of this.accounts){
-      try{if(!this.labelIds[acc.email])await this.ensureLabels(acc);await this.fetchAccount(acc,true);}
-      catch(err){toast('Could not load '+acc.email,'bell',err.message+'. Open Settings → Connect Gmail to sign in again.');}
+      try{if(!this.labelIds[acc.email])await this.ensureLabels(acc);await this.fetchAccount(acc,true);this.lastCheck=Date.now();}
+      catch(err){if(!err.auth)toast('Could not load '+acc.email,'bell',err.message+'. It will try again shortly.');}
     }
     this.start();this.ready=true;
     return true;
@@ -3981,7 +4054,7 @@ function renderSettings(){
     <div class="set-card"><h3>Accounts</h3>
       ${real.map(a=>`<div class="set-row"><span class="set-acct-dot" style="background:${a.color}"></span><div class="sr-main"><div class="sr-title">${esc(a.label)}</div><div class="sr-sub">${a.demo===false?'Connected with Google · mail stays on Gmail\'s servers':'Demo account · sample emails'}</div></div><button class="set-btn np-del" data-rmacct="${a.id}" data-tip="Remove|Takes this account out of SmartMail on this device. Nothing on Gmail is touched, and you can add it back any time.">${ic('close',11)} Remove</button></div>`).join('')}
       <div class="add-acct${open}" id="addAcct"><input id="addAcctInput" type="email" placeholder="name@gmail.com" aria-label="Gmail address"><button class="set-btn primary" id="addAcctGo">Continue with Google</button></div>
-      <div class="set-row"><div class="sr-main"><div class="sr-sub">${Gmail.on?'Add account opens Google\'s own sign-in window. SmartMail never sees your password.':'Gmail is not connected yet, so these are demo accounts with sample emails. Paste a Client ID above and Add account becomes real.'}</div></div><button class="set-btn" id="addAcctBtn">${ic('plus',12)} Add account</button></div>
+      <div class="set-row"><div class="sr-main"><div class="sr-sub">${Gmail.on?'Add account opens Google\'s own sign-in window. SmartMail never sees your password. Google asks SmartMail to re-confirm every hour with a tiny window that closes by itself. To let that happen in the background, allow pop-ups: in the SmartMail window click ⋮ (top right) → Site settings → Pop-ups and redirects → Allow. Otherwise it just waits for your next click.':'Gmail is not connected yet, so these are demo accounts with sample emails. Paste a Client ID above and Add account becomes real.'}</div></div><button class="set-btn" id="addAcctBtn">${ic('plus',12)} Add account</button></div>
     </div>
     <div class="set-card"><h3>Notifications</h3>
       ${row('Notifications','Show an alert when new mail arrives',sw('notif',PREFS.notif))}
@@ -4167,7 +4240,12 @@ if(window.ResizeObserver){
 document.fonts&&document.fonts.ready&&document.fonts.ready.then(placeAll);
 /* ============ REMEMBER YOUR OWN DATA BETWEEN VISITS (settings, signatures, notes, drafts, rules, groups, what the sorter learned) ============ */
 const SAVE_KEY='smartmail-proto-v1';
-function saveState(){
+function saveSnapshot(){
+  if(!Gmail.on||Gmail.loadingLocal)return;
+  try{const pick=EMAILS.filter(e=>e.gid&&(e.state==='active'||e.flagged)).slice(0,300).concat(EMAILS.filter(e=>e.gid&&e.state!=='active').slice(0,60));
+    localStorage.setItem('sm-snap',JSON.stringify(pick.map(e=>{const o=Store.strip(e);o.body=[e.snippet||''];o.snap=1;return o;})));}catch(e){}
+}
+function saveState(){saveSnapshot();
   try{localStorage.setItem(SAVE_KEY,JSON.stringify({ACCOUNTS,removedDemo:true,PREFS,SIGS,STYLE_RULES,NOTES,nextNote,DRAFTS,nextDraft,DECISIONS,GROUP_OVERRIDES,AUTO_RULES,CUSTOM_ICONS,CUSTOM_GROUPS,CONTACT_NOTES,CONTACT_PINS:[...CONTACT_PINS],openGroups:state.openGroups,sigAcct:state.sigAcct,peopleSort:state.peopleSort}));}catch(e){}
 }
 function loadState(){
@@ -4194,7 +4272,12 @@ window.addEventListener('beforeunload',saveState);
 document.addEventListener('input',()=>{clearTimeout(saveTimer);saveTimer=setTimeout(saveState,800);},true);
 document.addEventListener('click',()=>{clearTimeout(saveTimer);saveTimer=setTimeout(saveState,800);},true);
 
+// Real accounts: never flash the demo. Show the last-seen inbox instantly while the full copy opens.
+Gmail.load();
+if(Gmail.on){EMAILS.length=0;Gmail.syncAccountsList();Gmail.loadingLocal=true;try{(JSON.parse(localStorage.getItem('sm-snap')||'[]')).forEach(e=>EMAILS.push(mk(e)));}catch(e){}}
 renderAll();
+document.addEventListener('pointerdown',()=>{if(Gmail.on)Gmail.gestureRefresh();},true);
+document.addEventListener('keydown',()=>{if(Gmail.on)Gmail.gestureRefresh();},true);
 // a gentle demo: one email arrives on its own shortly after load
 Gmail.boot().then(live=>{if(live){const sf=$('simFloat');if(sf)sf.remove();}else{window.__demoTimer=setTimeout(simulateIncoming,14000);}});
 </script>
