@@ -958,6 +958,66 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 .m-avatar,.p-avatar,.s-avatar{position:relative;overflow:hidden}
 .av-logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:16%;background:#fff;opacity:0;transition:opacity .25s;box-sizing:border-box;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(20,40,80,.1)}
 .av-logo.ok{opacity:1}
+.pill-mini{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--subtle);color:var(--muted)}
+.pill-mini.ok{background:rgba(52,199,89,.14);color:#1f9d47}
+.bulk-banner{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 10px;border-radius:18px;background:linear-gradient(135deg,rgba(10,132,255,.10),rgba(94,92,230,.08));border:1px solid rgba(10,132,255,.18)}
+.bulk-banner .bb-ico{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--accent);color:#fff;flex:none}
+.bulk-banner .bb-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px}
+.bulk-banner .bb-txt span{color:var(--muted);font-size:12px}
+.bulk-wrap{position:fixed;inset:0;z-index:60;background:rgba(18,28,48,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;opacity:0;transition:opacity .25s}
+.bulk-wrap.show{opacity:1}
+.bulk-card{width:min(1080px,96vw);height:min(880px,92vh);background:rgba(250,252,255,.97);border-radius:26px;box-shadow:0 30px 80px -30px rgba(20,40,90,.45),0 0 0 1px rgba(255,255,255,.7);display:flex;flex-direction:column;overflow:hidden;transform:translateY(10px) scale(.985);transition:transform .35s var(--fluid)}
+.bulk-wrap.show .bulk-card{transform:none}
+.bulk-head{display:flex;align-items:flex-start;gap:16px;padding:22px 24px 12px}
+.bulk-head>div{flex:1;min-width:0}
+.bulk-head h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.bulk-head p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+.bulk-quick{display:flex;align-items:center;gap:12px;margin:4px 24px 10px;padding:12px 14px;border-radius:16px;background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.2)}
+.bulk-quick .bq-ico{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#34c759;color:#fff;flex:none}
+.bulk-quick .bq-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;font-size:13px}
+.bulk-quick .bq-txt span{color:var(--ink2);font-size:12.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bulk-tools{display:flex;align-items:center;gap:10px;padding:4px 24px 10px;flex-wrap:wrap}
+.bulk-tools input[type=search]{flex:1;min-width:160px;padding:8px 12px;border-radius:12px;background:var(--subtle);border:0;font:inherit;font-size:13px;outline:none}
+.seg-mini{display:flex;gap:2px;padding:3px;border-radius:12px;background:var(--subtle)}
+.seg-mini button{font-size:12px;font-weight:600;padding:6px 11px;border-radius:9px;color:var(--ink2)}
+.seg-mini button.on{background:#fff;color:var(--accent);box-shadow:0 2px 8px -4px rgba(20,40,90,.3)}
+.bulk-always{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2);font-weight:600}
+.bulk-list{flex:1;overflow-y:auto;padding:4px 16px 12px;border-top:1px solid var(--hair)}
+.bk-row{display:grid;grid-template-columns:36px minmax(0,1fr) 56px 150px 170px auto;align-items:center;gap:12px;padding:9px 8px;border-radius:14px}
+.bk-row:hover{background:rgba(10,132,255,.05)}
+.bk-main{display:flex;flex-direction:column;min-width:0}
+.bk-main b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-sub{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-n{font-weight:700;font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.bulk-more{display:block;margin:10px auto}
+.bulk-foot{display:flex;align-items:center;gap:12px;padding:14px 24px;border-top:1px solid var(--hair);background:rgba(255,255,255,.7)}
+.bulk-foot span{flex:1;color:var(--muted);font-size:12.5px}
+.bk-row .dd-btn,.bk-row select{width:100%}
+@media (max-width:760px){.bk-row{display:flex;flex-wrap:wrap;gap:8px 10px}.bk-row .bk-main{flex:1 1 calc(100% - 110px);min-width:0}.bk-row>select,.bk-row>.dd-btn,.bk-row>.dd-wrap{flex:1 1 38%;min-width:0}.bulk-quick{flex-wrap:wrap}.bulk-quick .set-btn{width:100%}.bulk-card{height:96vh;border-radius:20px}.bulk-head{padding:18px 16px 8px}.bulk-quick{margin:4px 12px 10px}.bulk-tools{padding:4px 12px 10px}.bulk-foot{flex-wrap:wrap;padding:12px 16px}.bulk-foot .set-btn{width:100%}}
+.groups-label{display:flex;align-items:center;justify-content:space-between}
+.grp-add{width:22px;height:22px;border-radius:8px;display:grid;place-items:center;color:var(--muted);transition:background .2s,color .2s}
+.grp-add:hover{background:var(--accent-soft);color:var(--accent)}
+.ge-card{width:min(460px,94vw);background:rgba(250,252,255,.98);border-radius:24px;padding:22px 22px 18px;box-shadow:0 30px 80px -30px rgba(20,40,90,.45),0 0 0 1px rgba(255,255,255,.7);transform:translateY(10px) scale(.985);transition:transform .35s var(--fluid)}
+.ge-wrap.show .ge-card{transform:none}
+.ge-card h2{margin:0;font-size:19px;letter-spacing:-.02em}
+.ge-sub{margin:4px 0 14px;color:var(--muted);font-size:12.5px;line-height:1.45}
+.ge-note{margin:-6px 0 10px;color:var(--muted);font-size:12px}
+.ge-name{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ge-prev{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--accent);color:#fff;flex:none;box-shadow:0 8px 18px -10px rgba(10,132,255,.7)}
+.ge-name input{flex:1;min-width:0;padding:11px 13px;border-radius:13px;border:1px solid var(--stroke);background:#fff;font:inherit;font-size:14px;outline:none}
+.ge-name input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ge-name input.err{border-color:#ff3b30}
+.ge-name input:disabled{background:var(--subtle);color:var(--muted)}
+.ge-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.ge-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px;max-height:230px;overflow-y:auto;padding:2px}
+.ge-ic{height:40px;border-radius:12px;display:grid;place-items:center;color:var(--ink2);background:var(--subtle);transition:background .15s,color .15s,transform .15s}
+.ge-ic:hover{background:var(--accent-soft);color:var(--accent)}
+.ge-ic.on{background:var(--accent);color:#fff;transform:scale(1.04)}
+.ge-foot{display:flex;align-items:center;gap:8px;margin-top:16px}
+.set-btn.danger{color:#ff3b30}
+#gistPop,.pop-menu,.gist-pop,.dd-menu{z-index:300!important}
+#toasts{z-index:320!important}
+.ge-wrap{z-index:80}
 </style>
 
 <div class="app" id="app">
@@ -998,7 +1058,7 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
    <nav class="pane side-main" id="sideNav" aria-label="Mailboxes">
     <div class="split-handle" id="splitHandle" data-tip="Resize|Drag up to shrink the accounts box and see more groups. Double-click to reset."><span></span></div>
     <div class="side-smart" id="sideSmart"><div class="pill solid" id="smartPill"></div><div id="smartItems"></div></div>
-    <div class="side-label groups-label">Groups</div>
+    <div class="side-label groups-label"><span>Groups</span><button class="grp-add" id="newGroupBtn" aria-label="New group" data-tip="New group|Make your own group with a name and an icon. Right-click any group to edit it."></button></div>
     <div class="side-scroll" id="sideGroups"><div class="grp-wrap" id="grpWrap"><div class="pill solid" id="grpPill"></div><div id="grpItems"></div></div></div>
    </nav>
   </aside>
@@ -1011,6 +1071,7 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
         <button class="sb-open" id="sbOpen" aria-label="Show side panel" data-tip="Show side panel|Brings the accounts and mailboxes back."></button>
         <h1 class="list-title" id="listTitle">Inbox</h1>
         <button class="new-btn" id="composeNew"></button>
+        <button class="new-btn" id="bulkOpen" data-tip="Bulk sort|Sort thousands of emails by sender in a few clicks. Free, on this device."></button>
         <button class="triage-btn" id="triageOpen"></button>
       </div>
       <div class="searchbar" id="searchWrap"><input id="searchInput" type="search" placeholder="Search mail…" aria-label="Search mail"><button class="gist-toggle" id="gistToggle" data-tip="Gists|Show the 3 to 9 word summary under every email in the list."></button></div>
@@ -1043,6 +1104,37 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 'use strict';
 /* ============ ICONS (A1 hairline set) ============ */
 const PATHS={
+  heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  dumbbell:'<path d="M6.5 7.5v9M3.5 10v4M17.5 7.5v9M20.5 10v4M6.5 12h11"/>',
+  music:'<path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
+  film:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v14M17 5v14M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/>',
+  game:'<path d="M7 9h10a4 4 0 0 1 4 4v1.5a2.5 2.5 0 0 1-4.5 1.5L15 14H9l-1.5 2A2.5 2.5 0 0 1 3 14.5V13a4 4 0 0 1 4-4z"/><path d="M8 11.5v3M6.5 13h3M15.5 12h.01M17.5 14h.01"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
+  gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12"/><path d="M12 8C10 4 6.5 4.5 7 7c.3 1 2 1 5 1zM12 8c2-4 5.5-3.5 5-1-.3 1-2 1-5 1z"/>',
+  star:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  camera:'<path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+  code:'<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+  palette:'<path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9-.5-1.2.3-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5.5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/>',
+  coffee:'<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 3v3M12 3v3"/>',
+  ball:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5l3.8 2.8-1.4 4.4H9.6l-1.4-4.4z"/><path d="M12 3v4.5M15.8 10.3l4.4-1.4M14.4 14.7l2.7 3.8M9.6 14.7l-2.7 3.8M8.2 10.3L3.8 8.9"/>',
+  paw:'<circle cx="7" cy="10" r="1.8"/><circle cx="10.5" cy="6.5" r="1.8"/><circle cx="14.5" cy="6.5" r="1.8"/><circle cx="18" cy="10" r="1.8"/><path d="M12 12c-2.5 0-5 3-5 5.2C7 19 8.5 19.5 12 18.6c3.5.9 5 .4 5-1.4 0-2.2-2.5-5.2-5-5.2z"/>',
+  leaf:'<path d="M5 19c0-8 5-13 15-14-1 10-6 15-14 15"/><path d="M5 19l8-8"/>',
+  cart:'<circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/><path d="M3 4h2.5l2.2 11h10.6L20.5 8H7"/>',
+  cap:'<path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5V16c1.5 1.5 3.5 2 5.5 2s4-.5 5.5-2v-4.5M21.5 9.5V15"/>',
+  pound:'<path d="M16.5 6.5A4 4 0 0 0 9 8v12M6 13h8M6 20h11"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+  tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
+  megaphone:'<path d="M3 10v4h4l9 5V5L7 10z"/><path d="M19 9a4 4 0 0 1 0 6M7 14l1.5 5h2.5l-1-5"/>',
+  wrench:'<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.7-5.7a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+  plane:'<path d="M21 4L3 11l6 2.5L11.5 20l3-5 4.5 3z"/><path d="M9 13.5L21 4"/>',
+  home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.2 3.2 0 0 1 0 6.3"/><path d="M18 14.2c1.8.8 3 2.6 3 4.8"/>',
+  news:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h10M7 17h6"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
   inbox:'<path d="M3 13.5h5l2 3h4l2-3h5"/><path d="M5.5 5h13L21 13.5V19H3v-5.5z"/>',
   note:'<rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 9h6M9 13h4"/>',
   flag:'<path d="M6 21V4"/><path d="M6 4h11l-2.5 4 2.5 4H6"/>',
@@ -1114,9 +1206,10 @@ const SENDERS={
   'gmail.com':{name:'People',group:'People',color:'#34c759'},
   'trainline.com':{name:'Trainline',group:'Travel',color:'#00a88f'},
 };
-const GROUP_ICON={Work:'briefcase',People:'person',Driving:'car',Finance:'card',Shopping:'bag',Travel:'train',Uni:'book'};
-const BASE_GROUPS=['Work','People','Driving','Finance','Shopping','Travel','Uni'];
+const GROUP_ICON={Work:'briefcase',People:'person',Driving:'car',Finance:'card',Shopping:'bag',Travel:'train',Uni:'book',Property:'home',Social:'users',Subscriptions:'news',Updates:'bell'};
+const BASE_GROUPS=['Work','People','Driving','Finance','Shopping','Travel','Uni','Property','Social','Subscriptions','Updates'];
 const GROUP_OVERRIDES={}; // senderKey -> group chosen by the user; beats the auto group
+const AUTO_RULES={};      // senderKey -> where new mail from them goes (done/junk/spam/bin)
 const CUSTOM_GROUPS=[];   // groups the user created themselves
 
 let nextId=1;
@@ -1285,14 +1378,49 @@ function threadMsgs(e){const k=threadKey(e);return EMAILS.filter(x=>threadKey(x)
 function threadLatest(e){const m=threadMsgs(e);return m[m.length-1];}
 function threadFace(e){const m=threadMsgs(e).filter(x=>!x.me);return m.length?m[m.length-1]:e;} // the other person, for name/avatar/group
 function threadCount(e){return threadMsgs(e).length;}
-function senderOf(e){return SENDERS[e.domain]||{name:e.fromName,group:'People',color:'#8e8e93'};}
-function senderKey(e){return e.domain==='gmail.com'?('p:'+e.fromName):e.domain;}
+function senderOf(e){return SENDERS[e.domain]||{name:e.fromName,group:autoGroup(e),color:'#8e8e93'};}
+// Free, on-device grouping for real mail: known company names first, then what
+// Gmail itself says (Promotions, Social, mailing lists), then the wording.
+const AUTO_GROUP_RULES=[
+ ['Shopping',/amazon|ebay|asos|argos|tesco|sainsbury|asda|morrisons|waitrose|ocado|johnlewis|john-lewis|zara|uniqlo|primark|nike|adidas|jdsports|footlocker|schuh|boots\.com|superdrug|currys|ikea|etsy|depop|vinted|shein|temu|aliexpress|deliveroo|ubereats|just-eat|justeat|selfridges|boohoo|prettylittlething|gymshark|endclothing|farfetch|mrporter|wayfair|dunelm|screwfix|wickes|diy\.com|hollister|abercrombie|very\.co|next\.co\.uk|hm\.com|gap\.com|levi|newlook|riverisland|matalan|tkmaxx|lush|sephora|lookfantastic|cultbeauty|royalmail|evri|hermes|dpd|yodel|ups\.com|fedex|parcelforce|stockx|zalando|sportsdirect|decathlon|cex|backmarket|musicmagpie|gousto|hellofresh|argos|ebay|apple\.com|store|shop/],
+ ['Finance',/monzo|starling|revolut|barclays|hsbc|lloyds|natwest|santander|nationwide|halifax|tsb|firstdirect|metrobank|chase|americanexpress|aexp|amex|paypal|klarna|clearpay|experian|equifax|clearscore|creditkarma|hmrc|vanguard|trading212|freetrade|hl\.co|moneybox|plum|wise\.com|transferwise|stripe|coinbase|octopus|edfenergy|britishgas|ovoenergy|eonenergy|thameswater|ee\.co|o2\.co|vodafone|three\.co|giffgaff|virginmedia|bt\.com|sky\.com|aviva|admiral|directline|comparethemarket|gocompare|moneysupermarket|studentfinance|slc\.co|council|tvlicensing|zopa|curve|tide\.co|xero|quickbooks|bank|credit|pension|insurance|energy/],
+ ['Travel',/trainline|nationalrail|gwr|avanti|lner|tfl\.gov|uber\.com|easyjet|ryanair|britishairways|\bba\.com|jet2|tui|booking\.com|airbnb|expedia|hotels\.com|skyscanner|eurostar|nationalexpress|megabus|premierinn|travelodge|hostelworld|loveholidays|wizzair|klm|emirates|crosscountry|thameslink|northernrailway|scotrail|airline|airways|rail/],
+ ['Driving',/dvsa|dvla|theaa|rac\.co|ringgo|justpark|parkingeye|autotrader|motors\.co|cazoo|cinch|webuyanycar|kwik-?fit|marmalade|bymiles|drivingtest|driving/],
+ ['Property',/rightmove|zoopla|onthemarket|spareroom|openrent|purplebricks|foxtons|savills|knightfrank|lettings|estate|property|homes/],
+ ['Social',/facebook|facebookmail|instagram|linkedin|twitter|\bx\.com|tiktok|snapchat|reddit|pinterest|discord|letterboxd|strava|youtube|twitch|whatsapp|meetup|tinder|hinge|bumble|threads\.net|bereal|quora|nextdoor|tumblr|telegram/],
+ ['Uni',/\.ac\.uk|\.edu\b|ucas|unidays|studentbeans|totum|blackboard|moodle|turnitin|university|college/],
+ ['Work',/figma|notion|slack|github|atlassian|trello|asana|zoom\.us|calendly|upwork|fiverr|indeed|adobe|canva|webflow|framer|dropbox|docusign|hubspot|monday\.com|clickup|loom|miro|behance|dribbble|squarespace|wix|shopify|godaddy|namecheap|vercel|netlify|cloudflare|frame\.io|vimeo|wetransfer|google\.com|microsoft/],
+ ['Subscriptions',/netflix|spotify|disney|primevideo|nowtv|audible|patreon|substack|medium\.com|mailchimp|beehiiv|convertkit|deezer|tidal|crunchyroll|duolingo|headspace|calm\.com|newsletter|digest/]
+];
+function isPersonalDomain(d){return typeof PERSONAL_DOMAINS!=='undefined'&&PERSONAL_DOMAINS.has(String(d||'').toLowerCase());}
+const AUTO_GROUP_CACHE={};
+function autoGroup(e){
+  const d=(e.domain||'').toLowerCase();
+  if(!d||isPersonalDomain(d))return 'People';
+  const key=d+'|'+(e.fromName||'');
+  if(AUTO_GROUP_CACHE[key])return AUTO_GROUP_CACHE[key];
+  const hay=(d+' '+(e.fromName||'')).toLowerCase();
+  let g=null;
+  for(const [grp,re] of AUTO_GROUP_RULES){if(re.test(hay)){g=grp;break;}}
+  if(!g){
+    const txt=((e.subject||'')+' '+(e.snippet||'')).toLowerCase();const from=(e.fromEmail||'').toLowerCase();
+    if(e.cat==='social')g='Social';
+    else if(/your order|dispatched|delivered|your parcel|basket|order confirm|shipped|out for delivery/.test(txt))g='Shopping';
+    else if(/statement|payment|invoice|direct debit|balance|account ending|your bill/.test(txt))g='Finance';
+    else if(/booking|flight|e-ticket|check-in|itinerary|reservation/.test(txt))g='Travel';
+    else if(e.cat==='promotions'||(e.bulk&&PROMO.test(txt))||PROMO.test(txt))g='Subscriptions';
+    else if(e.bulk||e.cat==='updates'||/noreply|no-reply|donotreply|notification|newsletter|^info@|^hello@|^news@|marketing|mailer|updates@|team@|support@/.test(from))g='Updates';
+    else g='People'; // a real person writing from a work address
+  }
+  return AUTO_GROUP_CACHE[key]=g;
+}
+function senderKey(e){return isPersonalDomain(e.domain)?('p:'+e.fromName):e.domain;}
 function senderDisplayName(e){return e.domain==='gmail.com'?e.fromName:senderOf(e).name;}
 function groupOf(e){
   if(e.me){const f=threadFace(e);if(f!==e)return groupOf(f);}
   const o=GROUP_OVERRIDES[senderKey(e)];
   if(o)return o;
-  return e.domain==='gmail.com'?'People':senderOf(e).group;
+  return isPersonalDomain(e.domain)?'People':senderOf(e).group;
 }
 function allGroups(){return [...BASE_GROUPS,...CUSTOM_GROUPS];}
 function inAccount(e){return state.account==='all'||e.account===state.account;}
@@ -1686,6 +1814,7 @@ function renderSidebar(){
     groups[g].senders[key]=groups[g].senders[key]||{name:sn.name,color:sn.color,domain:e.domain,fromName:e.fromName,unread:0};
     groups[g].senders[key].unread+=e.unread?1:0;
   });
+  CUSTOM_GROUPS.forEach(g=>{groups[g]=groups[g]||{unread:0,recency:Infinity,senders:{}};});
   // smart order: unread first, then most recent activity, then A→Z
   const order=Object.keys(groups).sort((a,b)=>
     (groups[b].unread-groups[a].unread)||(groups[a].recency-groups[b].recency)||a.localeCompare(b));
@@ -1716,6 +1845,7 @@ function renderSidebar(){
     state.openGroups[b.dataset.group]=true;
     state.view={type:'group',group:b.dataset.group};state.selected=null;state.listFilter='active';exitCompose();closeSidebar();renderAll();
   });
+  $('sideNav').querySelectorAll('[data-group]').forEach(b=>b.oncontextmenu=ev=>{ev.preventDefault();groupEditor(b.dataset.group);});
   $('sideNav').querySelectorAll('[data-sender]').forEach(b=>b.onclick=()=>{
     state.view={type:'sender',domain:b.dataset.sdomain,name:b.dataset.sname};state.selected=null;state.listFilter='active';exitCompose();closeSidebar();renderAll();
   });
@@ -1790,7 +1920,9 @@ function renderListInner(){
   const isBin=state.listFilter==='bin'&&state.view.type!=='reply';
   if(isBin)BINSEL.list=list;
   const binBar=isBin?binBarHtml(list):'';
-  $('listScroll').innerHTML=binBar+shown.map(e=>{
+  const actN=state.listFilter==='active'&&state.view.type==='inbox'&&!state.search?EMAILS.filter(m=>m.state==='active'&&!m.me&&(state.account==='all'||m.account===state.account)).length:0;
+  const bulkBanner=actN>=100?`<div class="bulk-banner"><span class="bb-ico">${ic('layers',18)}</span><span class="bb-txt"><b>${actN.toLocaleString()} emails waiting in Active</b><span>Bulk sort them by sender in a few clicks, instead of one by one.</span></span><button class="set-btn primary" id="bulkBannerGo">Bulk sort</button></div>`:'';
+  $('listScroll').innerHTML=bulkBanner+binBar+shown.map(e=>{
     const face=threadFace(e);const sn=senderOf(face);
     const g=groupOf(e);
     const inactive=e.state!=='active';
@@ -1949,6 +2081,218 @@ function wireBinSelect(list){
   box.onpointerup=end;box.onpointerleave=ev=>{if(BINSEL.drag&&!BINSEL.drag.moved)BINSEL.drag=null;};
   document.addEventListener('pointerup',end,{once:true});
 }
+
+
+/* ============ GROUPS: create, rename, pick an icon ============ */
+const GROUP_ICON_CHOICES=['folder','briefcase','person','users','home','car','train','plane','globe','card','pound','receipt','bag','cart','tag','book','cap','heart','dumbbell','ball','music','film','game','camera','palette','code','coffee','gift','calendar','star','paw','leaf','bolt','shield','wrench','sun','news','megaphone','bell','note','flag'];
+const CUSTOM_ICONS={}; // group -> icon the user picked
+const ICON_HINTS=[['heart',/health|doctor|nhs|dent|gp\b|therap|hospital|medic|pharm/],['dumbbell',/gym|fitness|workout|training|run/],['ball',/football|sport|club|match|team|golf|tennis/],['music',/music|band|gig|concert|dj|record/],['film',/film|movie|cinema|tv\b|stream|netflix/],['game',/game|gaming|xbox|playstation|steam|nintendo/],['plane',/flight|holiday|abroad|trip/],['globe',/travel|world|overseas/],['gift',/gift|birthday|present|christmas/],['calendar',/event|calendar|appointment|ticket/],['camera',/photo|camera|shoot|youtube|video|content|culture force/],['code',/dev|code|tech|software|github|app/],['palette',/design|art|creative|brand|studio/],['coffee',/food|cafe|coffee|restaurant|eat|takeaway/],['paw',/pet|dog|cat|vet/],['leaf',/garden|eco|plant|green/],['cart',/grocer|supermarket|food shop/],['cap',/school|uni|college|course|study|exam/],['pound',/money|bank|saving|tax|finance|invest/],['receipt',/bill|receipt|invoice|expense/],['bolt',/utilit|energy|electric|gas|water|broadband|phone/],['shield',/insur|security|legal/],['tag',/deal|offer|sale|coupon|discount/],['megaphone',/marketing|promo|newsletter|ads/],['users',/family|friends|social|mates/],['home',/house|home|rent|property|flat|landlord/],['briefcase',/work|job|client|freelance|business|career/],['car',/car|driving|motor/],['train',/train|commute|rail/],['wrench',/repair|diy|tools|maintenance/],['star',/favourite|important|vip/]];
+function suggestIcon(name){const n=String(name||'').toLowerCase();const h=ICON_HINTS.find(([,re])=>re.test(n));return h?h[0]:'folder';}
+function setGroupIcon(g,icon){CUSTOM_ICONS[g]=icon;GROUP_ICON[g]=icon;}
+function renameGroup(from,to){
+  const i=CUSTOM_GROUPS.indexOf(from);if(i>=0)CUSTOM_GROUPS[i]=to;
+  for(const k in GROUP_OVERRIDES)if(GROUP_OVERRIDES[k]===from)GROUP_OVERRIDES[k]=to;
+  if(CUSTOM_ICONS[from]){setGroupIcon(to,CUSTOM_ICONS[from]);delete CUSTOM_ICONS[from];delete GROUP_ICON[from];}
+  if(state.openGroups[from]){state.openGroups[to]=true;delete state.openGroups[from];}
+  if(state.view.type==='group'&&state.view.group===from)state.view.group=to;
+}
+function deleteGroup(g){
+  const i=CUSTOM_GROUPS.indexOf(g);if(i>=0)CUSTOM_GROUPS.splice(i,1);
+  for(const k in GROUP_OVERRIDES)if(GROUP_OVERRIDES[k]===g)delete GROUP_OVERRIDES[k];
+  delete CUSTOM_ICONS[g];delete GROUP_ICON[g];
+  if(state.view.type==='group'&&state.view.group===g)state.view={type:'inbox'};
+}
+function groupEditor(existing,onDone){
+  const isNew=!existing;const isCustom=existing&&CUSTOM_GROUPS.includes(existing);
+  let icon=existing?(GROUP_ICON[existing]||'folder'):'folder';let picked=!!existing;
+  const w=document.createElement('div');w.className='bulk-wrap ge-wrap';
+  const senders=existing?new Set(EMAILS.filter(e=>groupOf(e)===existing).map(senderKey)).size:0;
+  w.innerHTML=`<div class="ge-card" role="dialog" aria-label="${isNew?'New group':'Edit group'}">
+    <h2>${isNew?'New group':'Edit group'}</h2>
+    <p class="ge-sub">${isNew?'Give it a name and an icon. Then move senders into it from any email, or from Bulk sort.':senders.toLocaleString()+' sender'+(senders===1?'':'s')+' file into this group.'}</p>
+    <div class="ge-name"><span class="ge-prev" id="gePrev">${ic(icon,20)}</span><input id="geName" maxlength="24" placeholder="e.g. Gym, Bills, Culture Force" value="${esc(existing||'')}" ${existing&&!isCustom?'disabled':''}></div>
+    ${existing&&!isCustom?'<p class="ge-note">Built-in groups keep their name, but you can change the icon.</p>':''}
+    <div class="ge-label">Icon</div>
+    <div class="ge-icons">${GROUP_ICON_CHOICES.map(n=>`<button class="ge-ic ${n===icon?'on':''}" data-gi="${n}" aria-label="${n}">${ic(n,18)}</button>`).join('')}</div>
+    <div class="ge-foot">${isCustom?'<button class="set-btn danger" id="geDel">Delete group</button>':''}<span style="flex:1"></span><button class="set-btn" id="geCancel">Cancel</button><button class="set-btn primary" id="geOk">${isNew?'Create group':'Save'}</button></div>
+  </div>`;
+  document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add('show'));
+  const close=()=>{w.classList.remove('show');document.removeEventListener('keydown',key,true);setTimeout(()=>w.remove(),250);};
+  const name=w.querySelector('#geName');const prev=w.querySelector('#gePrev');
+  const paint=()=>{prev.innerHTML=ic(icon,20);w.querySelectorAll('[data-gi]').forEach(b=>b.classList.toggle('on',b.dataset.gi===icon));};
+  name.oninput=()=>{if(!picked){icon=suggestIcon(name.value);paint();}};
+  w.querySelectorAll('[data-gi]').forEach(b=>b.onclick=()=>{icon=b.dataset.gi;picked=true;paint();});
+  const ok=()=>{
+    const g=name.value.trim().replace(/\s+/g,' ');
+    if(!g){name.focus();name.classList.add('err');return;}
+    if(isNew||g!==existing){if(allGroups().some(x=>x.toLowerCase()===g.toLowerCase())&&g.toLowerCase()!==(existing||'').toLowerCase()){toast('There is already a group called '+g,'folder');name.focus();return;}}
+    if(isNew){CUSTOM_GROUPS.push(g);state.openGroups[g]=true;}
+    else if(isCustom&&g!==existing)renameGroup(existing,g);
+    setGroupIcon(isNew||isCustom?g:existing,icon);
+    close();saveState();
+    toast(isNew?g+' created':'Saved',GROUP_ICON[g]||'folder',isNew?'Move senders into it from an email’s group menu, or from Bulk sort.':'');
+    renderAll();if(BULK.open)renderBulk();
+    if(onDone)onDone(g);
+  };
+  w.querySelector('#geOk').onclick=ok;
+  w.querySelector('#geCancel').onclick=close;
+  w.onclick=ev=>{if(ev.target===w)close();};
+  const del=w.querySelector('#geDel');
+  if(del)del.onclick=()=>{if(!confirm('Delete the '+existing+' group?\n\nNo emails are deleted. Its senders go back to the group SmartMail picks for them.'))return;deleteGroup(existing);close();saveState();toast(existing+' deleted','folder','Its emails are back in their usual groups.');renderAll();if(BULK.open)renderBulk();};
+  const key=ev=>{if(ev.key==='Escape'){ev.stopPropagation();close();}else if(ev.key==='Enter'&&document.activeElement===name){ev.preventDefault();ok();}};
+  document.addEventListener('keydown',key,true);
+  setTimeout(()=>{if(!name.disabled)name.focus();},60);
+}
+
+/* ============ BULK SORT: by sender, free, on this device ============ */
+function bulkSetState(list,s,opts){
+  opts=opts||{};
+  const seen=new Set();const msgs=[];
+  list.forEach(e=>threadMsgs(e).forEach(m=>{if(!seen.has(m.id)){seen.add(m.id);msgs.push(m);}}));
+  if(!msgs.length)return null;
+  const prev=msgs.map(m=>({m,state:m.state,unread:m.unread,read:m.read}));
+  msgs.forEach(m=>{m.state=s;if(s!=='active'){m.unread=false;m.read=true;}});
+  if(Gmail.on){Gmail.bulkState(msgs,s);Store.putMany(msgs.filter(m=>m.gid)).catch(()=>{});}
+  if(s!=='active'&&state.selected&&msgs.some(m=>m.id===state.selected)){state.selected=null;$('reader').classList.remove('open');}
+  if(!opts.silent){
+    const L={done:'Done',junk:'Junk',spam:'Spam',bin:'Bin',active:'Active'};
+    toast(msgs.length.toLocaleString()+' email'+(msgs.length===1?'':'s')+' moved to '+L[s],s==='done'?'tick':s==='active'?'restore':'trash',opts.note||'Nothing deleted. Undo puts them all back.','',null,{label:'Undo',fn:()=>bulkUndo(prev)},9000);
+  }
+  if(!opts.noRender)renderAll();
+  return prev;
+}
+function bulkUndo(prev){
+  const by={};prev.forEach(p=>{p.m.state=p.state;p.m.unread=p.unread;p.m.read=p.read;(by[p.state]=by[p.state]||[]).push(p.m);});
+  if(Gmail.on){for(const st in by)Gmail.bulkState(by[st],st);Store.putMany(prev.map(p=>p.m).filter(m=>m.gid)).catch(()=>{});}
+  toast('Put back','restore',prev.length.toLocaleString()+' emails are where they were.');
+  renderAll();if(BULK.open)renderBulk();
+}
+function applyAutoRules(list){
+  const by={};let n=0;
+  list.forEach(e=>{if(e.me||e.state!=='active')return;const r=AUTO_RULES[senderKey(e)];if(r&&r!=='active'){(by[r]=by[r]||[]).push(e);n++;}});
+  for(const st in by)bulkSetState(by[st],st,{silent:true,noRender:true});
+  return n;
+}
+const BULK={open:false,filter:'all',q:'',limit:60,choice:{},always:true,age:'30'};
+const BULK_ACT={active:'Leave in Active',done:'Done',junk:'Junk',spam:'Spam',bin:'Bin'};
+function bulkPool(){return EMAILS.filter(e=>e.state==='active'&&!e.me&&(state.account==='all'||e.account===state.account));}
+function bulkRows(){
+  const by={};const now=Date.now();
+  const replied=new Set(EMAILS.filter(m=>m.me).map(m=>senderKey(threadFace(m))));
+  bulkPool().forEach(e=>{const k=senderKey(e);const r=by[k]=by[k]||{key:k,name:(!isPersonalDomain(e.domain)&&SENDERS[e.domain]&&SENDERS[e.domain].name)||e.fromName,email:e.fromEmail,domain:e.domain,items:[],promo:0,bulk:0,latest:0,sample:e};
+    r.items.push(e);const t=(e.subject||'')+' '+(e.snippet||'');if(PROMO.test(t))r.promo++;if(e.bulk||e.cat==='promotions')r.bulk++;r.latest=Math.max(r.latest,e.ts||0);});
+  return Object.values(by).map(r=>{
+    const g=groupOf(r.sample);const n=r.items.length;const person=g==='People';const talked=replied.has(r.key);
+    const ago=r.latest?Math.floor((now-r.latest)/864e5):999;
+    let act,why;
+    if(person||talked){act=ago<14?'active':'done';why=(talked?'You have emailed them':'A person')+(ago<14?', heard from them recently':', nothing recent');}
+    else if(r.promo/n>0.4||r.bulk/n>0.6||g==='Subscriptions'){act='junk';why='Mostly offers and newsletters';}
+    else if(g==='Social'){act='junk';why='Social notifications';}
+    else {act='done';why=g==='Updates'?'Automatic updates':'Receipts, alerts and updates';}
+    const c=BULK.choice[r.key]||{};
+    return Object.assign(r,{n,group:c.group||g,autoGroup:g,act:c.act||act,sugAct:act,why,ago});
+  }).sort((a,b)=>b.n-a.n);
+}
+function openBulk(){BULK.open=true;BULK.limit=60;renderBulk();}
+function closeBulk(){BULK.open=false;const w=$('bulkWrap');if(w){w.classList.remove('show');setTimeout(()=>w.remove(),250);}}
+function renderBulk(){
+  let w=$('bulkWrap');const fresh=!w;
+  if(!w){w=document.createElement('div');w.id='bulkWrap';w.className='bulk-wrap';document.body.appendChild(w);w.onclick=ev=>{if(ev.target===w)closeBulk();};}
+  const keepScroll=w.querySelector('.bulk-list')?w.querySelector('.bulk-list').scrollTop:0;
+  const pool=bulkPool();let rows=bulkRows();
+  const total=rows.length;
+  if(BULK.filter==='companies')rows=rows.filter(r=>r.group!=='People');else if(BULK.filter==='people')rows=rows.filter(r=>r.group==='People');
+  if(BULK.q){const q=BULK.q.toLowerCase();rows=rows.filter(r=>(r.name+' '+r.email+' '+r.domain+' '+r.group).toLowerCase().includes(q));}
+  const shown=rows.slice(0,BULK.limit);
+  const ageDays=+BULK.age;const cut=Date.now()-ageDays*864e5;
+  const oldN=pool.filter(e=>e.ts&&e.ts<cut&&!e.flagged).length;
+  const moving=rows.filter(r=>r.act!=='active');const movingN=moving.reduce((n,r)=>n+r.n,0);
+  const groups=allGroups();
+  w.innerHTML=`<div class="bulk-card" role="dialog" aria-label="Bulk sort">
+    <div class="bulk-head"><div><h2>Bulk sort</h2><p>${pool.length.toLocaleString()} emails in Active from ${total.toLocaleString()} senders. Free and on this device. Nothing is deleted: Done, Junk and Bin keep everything.</p></div><button class="set-btn" id="bulkClose">${ic('close',13)} Close</button></div>
+    <div class="bulk-quick">
+      <span class="bq-ico">${ic('tick',16)}</span>
+      <span class="bq-txt"><b>Quick clear</b><span>Everything in Active older than <select id="bulkAge">${[['7','1 week'],['30','1 month'],['90','3 months'],['365','1 year']].map(([v,l])=>`<option value="${v}" ${BULK.age===v?'selected':''}>${l}</option>`).join('')}</select> goes to Done. Needs Reply is left alone.</span></span>
+      <button class="set-btn primary" id="bulkOld" ${oldN?'':'disabled'}>Mark ${oldN.toLocaleString()} as Done</button>
+    </div>
+    <div class="bulk-tools">
+      <div class="seg-mini">${[['all','All senders'],['companies','Companies'],['people','People']].map(([k,l])=>`<button data-bf="${k}" class="${BULK.filter===k?'on':''}">${l}</button>`).join('')}</div>
+      <input id="bulkQ" type="search" placeholder="Search senders…" value="${esc(BULK.q)}">
+      <label class="bulk-always" data-tip="Remember|New mail from these senders goes straight to the same place, including older mail still downloading.">${sw('bulkAlways',BULK.always)} Do the same for new mail</label>
+    </div>
+    <div class="bulk-list">
+      ${shown.map(r=>`<div class="bk-row" data-bk="${esc(r.key)}">
+        <span class="m-avatar" style="background:${avBg(r.email,r.name)}">${initials(r.name||'?')}${r.group==='People'?'':logoTag(r.email)}</span>
+        <span class="bk-main"><b>${esc(r.name||r.email)}</b><span class="bk-sub">${esc(r.group==='People'?r.email:r.domain)} · ${esc(r.why)} · suggests ${BULK_ACT[r.sugAct]}</span></span>
+        <span class="bk-n">${r.n.toLocaleString()}</span>
+        <select data-bg="${esc(r.key)}" aria-label="Group">${groups.map(g=>`<option value="${esc(g)}" ${g===r.group?'selected':''}>${esc(g)}</option>`).join('')}<option value="__new">+ New group…</option></select>
+        <select data-ba="${esc(r.key)}" aria-label="Move to">${Object.entries(BULK_ACT).map(([k,l])=>`<option value="${k}" ${k===r.act?'selected':''}>${l}</option>`).join('')}</select>
+        <button class="set-btn" data-bapply="${esc(r.key)}">Apply</button>
+      </div>`).join('')||`<div class="bin-hint" style="padding:30px;text-align:center">${pool.length?'No senders match.':'Active is empty. Nice.'}</div>`}
+      ${rows.length>shown.length?`<button class="set-btn bulk-more" id="bulkMore">Show ${Math.min(60,rows.length-shown.length)} more senders (${(rows.length-shown.length).toLocaleString()} left)</button>`:''}
+    </div>
+    <div class="bulk-foot"><span>${moving.length.toLocaleString()} senders · ${movingN.toLocaleString()} emails will move. Groups update for every email from that sender.</span><button class="set-btn primary" id="bulkAll" ${rows.length?'':'disabled'}>Apply all ${rows.length.toLocaleString()} senders</button></div>
+  </div>`;
+  if(fresh)requestAnimationFrame(()=>w.classList.add('show'));else w.classList.add('show');
+  const L=w.querySelector('.bulk-list');if(L&&keepScroll)L.scrollTop=keepScroll;
+  const rowByKey=k=>rows.find(r=>r.key===k);
+  w.querySelector('#bulkClose').onclick=closeBulk;
+  w.querySelector('#bulkAge').onchange=ev=>{BULK.age=ev.target.value;renderBulk();};
+  w.querySelector('#bulkOld').onclick=()=>{const list=bulkPool().filter(e=>e.ts&&e.ts<cut&&!e.flagged);if(!list.length)return;bulkSetState(list,'done',{note:'Everything older than '+w.querySelector('#bulkAge').selectedOptions[0].textContent+'. Undo puts them all back.'});renderBulk();};
+  w.querySelectorAll('[data-bf]').forEach(b=>b.onclick=()=>{BULK.filter=b.dataset.bf;BULK.limit=60;renderBulk();});
+  const q=w.querySelector('#bulkQ');q.oninput=()=>{BULK.q=q.value;clearTimeout(BULK.qt);BULK.qt=setTimeout(()=>{renderBulk();const n=$('bulkQ');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length);}},200);};
+  w.querySelector('[data-sw="bulkAlways"]').onclick=ev=>{BULK.always=!BULK.always;ev.currentTarget.setAttribute('aria-checked',BULK.always);};
+  w.querySelectorAll('[data-bg]').forEach(sel=>sel.onchange=()=>{const k=sel.dataset.bg;if(sel.value==='__new'){groupEditor(null,g=>{(BULK.choice[k]=BULK.choice[k]||{}).group=g;renderBulk();});renderBulk();return;}(BULK.choice[k]=BULK.choice[k]||{}).group=sel.value;});
+  w.querySelectorAll('[data-ba]').forEach(sel=>sel.onchange=()=>{const k=sel.dataset.ba;(BULK.choice[k]=BULK.choice[k]||{}).act=sel.value;});
+  const apply=(list)=>{
+    const by={};let moved=0;
+    list.forEach(r=>{const c=BULK.choice[r.key];if(c){if(c.act)r.act=c.act;if(c.group)r.group=c.group;}});
+    list.forEach(r=>{
+      if(r.group!==r.autoGroup||GROUP_OVERRIDES[r.key])GROUP_OVERRIDES[r.key]=r.group;
+      if(BULK.always&&r.act!=='active')AUTO_RULES[r.key]=r.act;else if(r.act==='active')delete AUTO_RULES[r.key];
+      if(r.act!=='active'){(by[r.act]=by[r.act]||[]).push(...r.items);moved+=r.n;}
+      delete BULK.choice[r.key];
+    });
+    const prevAll=[];for(const st in by){const p=bulkSetState(by[st],st,{silent:true,noRender:true});if(p)prevAll.push(...p);}
+    saveState();
+    toast(list.length===1?(list[0].name+': '+(list[0].act==='active'?'kept in Active':moved.toLocaleString()+' moved to '+BULK_ACT[list[0].act])):(moved.toLocaleString()+' emails sorted from '+list.length.toLocaleString()+' senders'),'tick',BULK.always?'New mail from them will go to the same place.':'Nothing deleted.','',null,prevAll.length?{label:'Undo',fn:()=>bulkUndo(prevAll)}:null,9000);
+    renderAll();renderBulk();
+  };
+  w.querySelectorAll('[data-bapply]').forEach(b=>b.onclick=()=>{const r=rowByKey(b.dataset.bapply);if(r)apply([r]);});
+  w.querySelector('#bulkAll').onclick=()=>{
+    const moveN=rows.filter(r=>r.act!=='active').reduce((n,r)=>n+r.n,0);
+    if(!confirm('Apply all '+rows.length.toLocaleString()+' senders?\n\n'+moveN.toLocaleString()+' emails move out of Active. Nothing is deleted, and Undo puts everything back.'))return;
+    apply(rows);
+  };
+  const more=w.querySelector('#bulkMore');if(more)more.onclick=()=>{BULK.limit+=60;renderBulk();};
+}
+
+/* ============ ALERTS: Mac notifications, Dock badge, chime ============ */
+function sysNotify(e,title,body){
+  if(!PREFS.notif||!('Notification' in window)||Notification.permission!=='granted')return false;
+  if(document.visibilityState==='visible'&&document.hasFocus())return false;
+  try{const d=rootDomain(e.fromEmail);const icon=d&&!isPersonalDomain(d)?'https://www.google.com/s2/favicons?domain='+d+'&sz=128':'icon.svg';
+    const n=new Notification(title,{body,tag:'sm-'+e.id,icon,silent:!PREFS.sound});
+    n.onclick=()=>{try{window.focus();}catch(x){}openEmail(e.id);n.close();};return true;}catch(x){return false;}
+}
+function askAlerts(){
+  if(!('Notification' in window))return Promise.resolve('unsupported');
+  if(Notification.permission!=='default')return Promise.resolve(Notification.permission);
+  return Notification.requestPermission().then(p=>{updateBadge();if(state.settings)renderSettings();return p;}).catch(()=>'default');
+}
+function chime(){
+  if(!PREFS.sound)return;
+  try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=chime.ctx=chime.ctx||new C();if(c.state==='suspended')c.resume();const t=c.currentTime;
+    [988,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;const st=t+i*.13;g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(.09,st+.02);g.gain.exponentialRampToValueAtTime(.0008,st+.55);o.connect(g);g.connect(c.destination);o.start(st);o.stop(st+.6);});}catch(e){}
+}
+function updateBadge(){
+  try{
+    const n=EMAILS.filter(e=>e.state==='active'&&e.unread&&!e.me&&PREFS.acctNotif[e.account]!==false).length;
+    if('setAppBadge' in navigator){if(PREFS.badge&&n)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{});}
+    document.title=(PREFS.badge&&n?'('+n.toLocaleString()+') ':'')+'SmartMail';
+  }catch(e){}
+}
+
 function deleteForever(list){
   list=list.filter(Boolean);if(!list.length)return;
   const threads=[...new Set(list.map(threadKey))];
@@ -2011,7 +2355,8 @@ function showGroupMenu(anchor,e){
   };
   pop.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>apply(b.dataset.pick));
   const ng=pop.querySelector('[data-newgrp]');
-  if(ng)ng.onclick=()=>{
+  if(ng)ng.onclick=()=>{pop.hidden=true;groupEditor(null,g=>apply(g));};
+  if(false){
     pop.innerHTML=`<div class="gp-label">Name the new group</div><input id="newGrpInput" placeholder="e.g. Uni, Bills, Side projects" maxlength="24">`;
     const inp=pop.querySelector('#newGrpInput');inp.focus();
     inp.onkeydown=ev=>{
@@ -3093,7 +3438,7 @@ const Store={
   open(){return new Promise((res,rej)=>{if(this.db)return res(this.db);const r=indexedDB.open('smartmail',1);
     r.onupgradeneeded=()=>{const db=r.result;const st=db.createObjectStore('emails',{keyPath:'key'});st.createIndex('account','account');db.createObjectStore('meta',{keyPath:'k'});};
     r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);});},
-  strip(e){const o={};['key','gid','thread','msgId','account','me','gtrash','domain','fromName','fromEmail','to','subject','time','day','ts','snippet','body','state','flagged','triaged','attachments','gist'].forEach(k=>{if(e[k]!==undefined)o[k]=e[k];});return o;},
+  strip(e){const o={};['key','gid','thread','msgId','account','me','gtrash','domain','fromName','fromEmail','to','subject','time','day','ts','snippet','body','state','flagged','triaged','attachments','gist','cat','bulk'].forEach(k=>{if(e[k]!==undefined)o[k]=e[k];});return o;},
   async putMany(list){if(!list.length)return;const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('emails','readwrite');const st=tx.objectStore('emails');list.forEach(e=>{if(e.gid){e.key=e.account+':'+e.gid;st.put(this.strip(e));}});tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});},
   async all(){const db=await this.open();return new Promise((res,rej)=>{const r=db.transaction('emails').objectStore('emails').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error);});},
   async deleteAccount(accId){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('emails','readwrite');const idx=tx.objectStore('emails').index('account');const r=idx.openKeyCursor(IDBKeyRange.only(accId));r.onsuccess=()=>{const c=r.result;if(c){tx.objectStore('emails').delete(c.primaryKey);c.continue();}};tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});},
@@ -3170,18 +3515,19 @@ const Gmail={
   // Gmail allows roughly 250 "units" per second per user. Stay well under it
   // (a message read costs 5, a send 100) and, if Google still says slow down,
   // wait and try again rather than give up.
-  cost(path,opts){const m=(opts&&opts.method)||'GET';if(/messages\/send/.test(path))return 100;if(/^history/.test(path))return 2;if(m!=='GET')return 10;return 5;},
-  async pace(acc,units){const rate=110/1000;const now=Date.now();acc._next=Math.max(acc._next||0,now);const wait=acc._next-now;acc._next+=units/rate;if(wait>0)await new Promise(r=>setTimeout(r,wait));},
+  cost(path,opts){const m=(opts&&opts.method)||'GET';if(/messages\/send/.test(path))return 100;if(/batchModify/.test(path))return 50;if(/^history/.test(path))return 2;if(m!=='GET')return 10;return 5;},
+  async pace(acc,units){const rate=(acc._rate||100)/1000;const now=Date.now();acc._next=Math.max(acc._next||0,now);const wait=acc._next-now;acc._next+=units/rate;if(wait>0)await new Promise(r=>setTimeout(r,wait));},
   async api(acc,path,opts){
     opts=opts||{};
     for(let attempt=0;;attempt++){
       await this.pace(acc,this.cost(path,opts));
-      try{return await this.api1(acc,path,opts);}
+      try{const out=await this.api1(acc,path,opts);acc._ok=(acc._ok||0)+1;if(acc._ok%40===0)acc._rate=Math.min(240,(acc._rate||100)*1.12);return out;}
       catch(err){
         const busy=err.status===429||(err.status===403&&/rate|quota|limit/i.test(err.message))||err.status>=500||err.network;
         const unsafe=/messages\/send/.test(path)&&!(err.status===429||err.status===403);
         if(!busy||unsafe||attempt>=7)throw err;
-        const wait=Math.min(64000,2000*Math.pow(2,attempt))+Math.random()*1000;
+        if((err.status===429||err.status===403)&&Date.now()-(acc._cutAt||0)>3000){acc._cutAt=Date.now();acc._rate=Math.max(20,(acc._rate||100)*0.7);acc._ok=0;}
+        const wait=Math.min(64000,1500*Math.pow(2,attempt))+Math.random()*1000;
         acc._next=Math.max(acc._next||0,Date.now()+wait);
         this.slowNote(acc,wait);
         await new Promise(r=>setTimeout(r,wait));
@@ -3250,7 +3596,7 @@ const Gmail={
       to:(H.to||''),subject:H.subject||'(no subject)',time:t.time,day:t.day,ts:+m.internalDate,
       snippet:(m.snippet||'').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&'),body:body.length?body:[m.snippet||''],
       state:this.stateFromLabels(acc,labels),gtrash:labels.includes('TRASH')||labels.includes('SPAM'),flagged:labels.includes('STARRED'),triaged:labels.includes(L.Sorted)||!labels.includes('INBOX'),
-      attachments:[]};
+      attachments:[],cat:(labels.find(l=>/^CATEGORY_/.test(l))||'').slice(9).toLowerCase()||null,bulk:!!(H['list-unsubscribe']||/bulk|list/i.test(H.precedence||''))};
     const walk=p=>{if(!p)return;if(p.filename&&p.body&&p.body.attachmentId)e.attachments.push({name:p.filename,size:p.body.size||0});(p.parts||[]).forEach(walk);};walk(m.payload);
     e.gist=extractiveGist(e);
     return e;
@@ -3293,7 +3639,10 @@ const Gmail={
     if(!initial)added.filter(e=>!e.me&&e.state==='active').forEach(e=>{
       const prior=EMAILS.filter(x=>x.thread===e.thread&&x!==e);const wasIn=prior.length&&prior[0].state!=='active'?prior[0].state:null;
       if(wasIn){prior.forEach(m=>{m.state='active';Store.mark(m);});this.modify(e,{addLabelIds:['INBOX']},true);}
-      if(PREFS.notif&&PREFS.acctNotif[e.account]!==false)toast(wasIn?e.fromName+' replied, conversation back in Active':'New email · '+e.fromName,wasIn?'reply':'bell','Auto-filed into '+groupOf(e)+' · '+acctShort(e.account),PREFS.gistAlert?e.gist:'',()=>{openEmail(e.id);});
+      if(PREFS.notif&&PREFS.acctNotif[e.account]!==false){
+        const title=wasIn?e.fromName+' replied':e.fromName;const sub=wasIn?'Conversation back in Active':(e.subject||'');
+        if(!sysNotify(e,title,sub+(PREFS.gistAlert&&e.gist?'\n'+e.gist:''))){toast(wasIn?e.fromName+' replied, conversation back in Active':'New email · '+e.fromName,wasIn?'reply':'bell','Auto-filed into '+groupOf(e)+' · '+acctShort(e.account),PREFS.gistAlert?e.gist:'',()=>{openEmail(e.id);});chime();}
+      }
       if(Engine.kind!=='rules')Engine.gist(e).then(g=>{e.gist=g;Store.mark(e);renderList();});
     });
     renderAll();
@@ -3307,6 +3656,7 @@ const Gmail={
       const got=batch.filter(Boolean).map(m=>mk(this.toEmail(acc,m)));
       got.forEach(e=>{EMAILS.push(e);added.push(e);});
       Store.putMany(got).catch(()=>{});
+      applyAutoRules(got);
     }
     return added;
   },
@@ -3374,6 +3724,23 @@ const Gmail={
     const add={active:['INBOX'],done:[L.Done],junk:[L.Junk],spam:[L.Spam],bin:[L.Bin]}[s]||[];
     this.modify(e,{addLabelIds:add.concat(s!=='active'?[L.Sorted]:[]).filter(Boolean),removeLabelIds:all.filter(x=>!add.includes(x))},true);
   },
+  async bulkState(msgs,s){
+    const by={};msgs.forEach(m=>{if(m.gid&&m.account)(by[m.account]=by[m.account]||[]).push(m);});
+    for(const accId in by){
+      const acc=this.accounts.find(a=>a.id===accId);if(!acc)continue;const L=this.labelIds[acc.email]||{};
+      const all=['INBOX','SPAM',L.Done,L.Junk,L.Spam,L.Bin].filter(Boolean);
+      const add=(({active:['INBOX'],done:[L.Done],junk:[L.Junk],spam:[L.Spam],bin:[L.Bin]})[s]||[]).filter(Boolean);
+      const body={addLabelIds:add.concat(s!=='active'&&L.Sorted?[L.Sorted]:[]),removeLabelIds:all.filter(x=>!add.includes(x))};
+      const tr=[...new Set(by[accId].filter(m=>m.gtrash).map(m=>m.thread))];
+      for(const t of tr){try{await this.api(acc,'threads/'+t.slice(2)+'/untrash',{method:'POST'});}catch(x){}}
+      by[accId].forEach(m=>{m.gtrash=false;});
+      const ids=by[accId].map(m=>m.gid);
+      for(let i=0;i<ids.length;i+=1000){
+        try{await this.api(acc,'messages/batchModify',{method:'POST',body:JSON.stringify(Object.assign({ids:ids.slice(i,i+1000)},body))});}
+        catch(err){toast('Gmail did not take a bulk change','bell',err.message+'. SmartMail will try again on the next sync.');}
+      }
+    }
+  },
   setFlag(e){Store.mark(e);this.modify(e,e.flagged?{addLabelIds:['STARRED']}:{removeLabelIds:['STARRED']},false);},
   markSorted(e){const acc=this.accFor(e);if(!acc)return;const L=this.labelIds[acc.email]||{};if(L.Sorted)this.modify(e,{addLabelIds:[L.Sorted]},true);},
   markUnsorted(e){const acc=this.accFor(e);if(!acc)return;const L=this.labelIds[acc.email]||{};if(L.Sorted)this.modify(e,{removeLabelIds:[L.Sorted]},true);},
@@ -3428,6 +3795,10 @@ $('menuBtn').onclick=()=>$('sidebar').classList.toggle('open');
 $('searchInput').oninput=ev=>{state.search=ev.target.value;renderList();};
 $('triageOpen').innerHTML=ic('sparkle',12)+' Sort Mail';$('triageOpen').dataset.tip='Sort Mail|Go through new emails one at a time: swipe right to keep, left for junk, up for needs reply.';
 $('triageOpen').onclick=openTriage;
+$('newGroupBtn').innerHTML=ic('plus',13);$('newGroupBtn').onclick=()=>groupEditor(null);
+$('bulkOpen').innerHTML=ic('layers',12)+' Bulk sort';$('bulkOpen').onclick=openBulk;
+document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();});
+document.addEventListener('keydown',ev=>{if(BULK.open&&ev.key==='Escape'){ev.stopPropagation();ev.preventDefault();closeBulk();}},true);
 $('composeNew').innerHTML=ic('pencil',12)+' New';$('composeNew').dataset.tip='New|Write a new email, or describe it and let it be drafted for you.';
 $('composeNew').onclick=()=>{if(state.view.type==='notes'){const i=$('noteInput');if(i){i.focus();return;}}state.selected=null;$('reader').classList.remove('open');openCompose(null);};
 /* mock mode (prototype only): ?accts=N&groups=M shows how the sidebar reflows with N accounts (1-10) and M groups */
@@ -3462,7 +3833,7 @@ $('gistToggle').onclick=()=>{state.gistsInline=!state.gistsInline;$('gistToggle'
 $('searchWrap').insertAdjacentHTML('afterbegin',ic('search',13));
 
 function syncUnread(){EMAILS.forEach(m=>{m.unread=m.state==='active'&&!m.me;m.read=!m.unread;});}
-var renderAll=function(){syncUnread();renderAccounts();renderSidebar();renderList();renderReader();if(state.settings)renderSettings();}
+var renderAll=function(){syncUnread();renderAccounts();renderSidebar();renderList();renderReader();if(state.settings)renderSettings();updateBadge();}
 
 /* ============ LOGO -> SETTINGS MORPH ============ */
 let logoTimer=null;
@@ -3614,6 +3985,7 @@ function renderSettings(){
     </div>
     <div class="set-card"><h3>Notifications</h3>
       ${row('Notifications','Show an alert when new mail arrives',sw('notif',PREFS.notif))}
+      ${(()=>{const p='Notification' in window?Notification.permission:'unsupported';return row('Alerts on this Mac',p==='granted'?'Allowed. New mail pops up in the corner while SmartMail is open, even minimised or behind other windows.':p==='denied'?'Blocked. Open System Settings → Notifications → SmartMail (or Google Chrome) and allow, then reload.':p==='unsupported'?'This browser cannot show system alerts.':'Not allowed yet. Press Allow and choose Allow in the box that appears.',p==='default'?'<button class="set-btn primary" id="allowAlerts">Allow</button>':`<span class="pill-mini ${p==='granted'?'ok':''}">${p==='granted'?'On':p==='denied'?'Blocked':'—'}</span>`);})()}
       ${row('Sound','Play a soft chime',sw('sound',PREFS.sound))}
       ${row('Dock badge','Red bubble with the unread count',sw('badge',PREFS.badge))}
       ${row('AI gist in alerts','Add the 3 to 9 word summary to each alert',sw('gistAlert',PREFS.gistAlert))}
@@ -3665,9 +4037,10 @@ function renderSettings(){
     b.setAttribute('aria-checked',on);
     if(k==='gists'){state.gistsInline=on;$('gistToggle').classList.toggle('on',on);}
     else if(k.startsWith('sigauto:')){const id=k.slice(8);SIGS[id]=SIGS[id]||{};SIGS[id].auto=on;}
-    else if(k.startsWith('acct:'))PREFS.acctNotif[k.slice(5)]=on;
-    else PREFS[k]=on;
+    else if(k.startsWith('acct:')){PREFS.acctNotif[k.slice(5)]=on;updateBadge();}
+    else{PREFS[k]=on;if(k==='notif'&&on)askAlerts();if(k==='badge'){if(on)askAlerts();updateBadge();}if(k==='sound'&&on)chime();}
   });
+  const aa=P.querySelector('#allowAlerts');if(aa)aa.onclick=()=>askAlerts();
   P.querySelector('#openSig').onclick=openSigEditor;
   P.querySelector('#resetProto').onclick=()=>{if(confirm('Reset the prototype? Your notes, drafts, signatures and settings here will be cleared.'))resetState();};
   const sv=P.querySelector('#setVoice');if(sv){fillVoices(sv);sv.onchange=()=>{try{localStorage.setItem('sm-voice',sv.value);}catch(e){}readAloud('Hi Luca, this is how I sound.',P.querySelector('#voiceTry'));};}
@@ -3795,7 +4168,7 @@ document.fonts&&document.fonts.ready&&document.fonts.ready.then(placeAll);
 /* ============ REMEMBER YOUR OWN DATA BETWEEN VISITS (settings, signatures, notes, drafts, rules, groups, what the sorter learned) ============ */
 const SAVE_KEY='smartmail-proto-v1';
 function saveState(){
-  try{localStorage.setItem(SAVE_KEY,JSON.stringify({ACCOUNTS,removedDemo:true,PREFS,SIGS,STYLE_RULES,NOTES,nextNote,DRAFTS,nextDraft,DECISIONS,GROUP_OVERRIDES,CUSTOM_GROUPS,CONTACT_NOTES,CONTACT_PINS:[...CONTACT_PINS],openGroups:state.openGroups,sigAcct:state.sigAcct,peopleSort:state.peopleSort}));}catch(e){}
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({ACCOUNTS,removedDemo:true,PREFS,SIGS,STYLE_RULES,NOTES,nextNote,DRAFTS,nextDraft,DECISIONS,GROUP_OVERRIDES,AUTO_RULES,CUSTOM_ICONS,CUSTOM_GROUPS,CONTACT_NOTES,CONTACT_PINS:[...CONTACT_PINS],openGroups:state.openGroups,sigAcct:state.sigAcct,peopleSort:state.peopleSort}));}catch(e){}
 }
 function loadState(){
   try{
@@ -3806,7 +4179,7 @@ function loadState(){
     if(d.NOTES){NOTES=d.NOTES;nextNote=d.nextNote||NOTES.length+1;}
     if(d.DRAFTS){DRAFTS=d.DRAFTS;nextDraft=d.nextDraft||DRAFTS.length+1;}
     (d.DECISIONS||[]).forEach(x=>DECISIONS.push(x));
-    Object.assign(GROUP_OVERRIDES,d.GROUP_OVERRIDES||{});(d.CUSTOM_GROUPS||[]).forEach(g=>{if(!CUSTOM_GROUPS.includes(g))CUSTOM_GROUPS.push(g);});
+    Object.assign(GROUP_OVERRIDES,d.GROUP_OVERRIDES||{});Object.assign(AUTO_RULES,d.AUTO_RULES||{});Object.entries(d.CUSTOM_ICONS||{}).forEach(([g,i])=>setGroupIcon(g,i));(d.CUSTOM_GROUPS||[]).forEach(g=>{if(!CUSTOM_GROUPS.includes(g))CUSTOM_GROUPS.push(g);});
     Object.assign(CONTACT_NOTES,d.CONTACT_NOTES||{});(d.CONTACT_PINS||[]).forEach(x=>CONTACT_PINS.add(x));
     if(d.openGroups)state.openGroups=d.openGroups;if(d.sigAcct)state.sigAcct=d.sigAcct;if(d.peopleSort)state.peopleSort=d.peopleSort;
     if(PREFS.theme&&PREFS.theme!=='auto')document.documentElement.setAttribute('data-theme',PREFS.theme);
