@@ -955,6 +955,9 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
   .r-subject{font-size:16px}
   .deck{height:300px}
 }
+.m-avatar,.p-avatar,.s-avatar{position:relative;overflow:hidden}
+.av-logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:16%;background:#fff;opacity:0;transition:opacity .25s;box-sizing:border-box;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(20,40,80,.1)}
+.av-logo.ok{opacity:1}
 </style>
 
 <div class="app" id="app">
@@ -1294,6 +1297,27 @@ function groupOf(e){
 function allGroups(){return [...BASE_GROUPS,...CUSTOM_GROUPS];}
 function inAccount(e){return state.account==='all'||e.account===state.account;}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Sender pictures: company mail shows the company's own logo (from Google's
+// free public site-icon service, cached by the browser); people on personal
+// addresses get a colourful tile with their initials.
+const PERSONAL_DOMAINS=new Set(['gmail.com','googlemail.com','outlook.com','hotmail.com','hotmail.co.uk','live.com','live.co.uk','msn.com','icloud.com','me.com','mac.com','yahoo.com','yahoo.co.uk','ymail.com','aol.com','proton.me','protonmail.com','btinternet.com','sky.com','virginmedia.com','talktalk.net','gmx.com','mail.com','zoho.com']);
+const AV_PALETTE=['#0a84ff','#5e5ce6','#bf5af2','#ff375f','#ff9f0a','#30b0c7','#34c759','#ff6b3d','#007aff','#af52de','#e0457b','#0fa58f','#d4881a','#5856d6'];
+function avHash(t){let h=0;for(const ch of String(t||''))h=(h*31+ch.charCodeAt(0))>>>0;return h;}
+function avBg(email,name){return AV_PALETTE[avHash((email||name||'').toLowerCase())%AV_PALETTE.length];}
+function rootDomain(email){
+  let d=String(email||'').toLowerCase();d=d.includes('@')?d.split('@')[1]:d;d=d.replace(/[^a-z0-9.-]/g,'');if(!d)return '';
+  const p=d.split('.');if(p.length<=2)return d;
+  const sl=p[p.length-2];const two=['co','com','org','net','ac','gov','ltd','plc','me','edu','nhs'].includes(sl)&&p[p.length-1].length===2;
+  return p.slice(two?-3:-2).join('.');
+}
+const LOGO_BAD=new Set();
+function logoTag(email){
+  const d=rootDomain(email);if(!d||PERSONAL_DOMAINS.has(d)||LOGO_BAD.has(d))return '';
+  return `<img class="av-logo" alt="" loading="lazy" referrerpolicy="no-referrer" data-dom="${d}" src="https://www.google.com/s2/favicons?domain=${d}&sz=128" onload="avLogoOk(this)" onerror="avLogoBad(this)">`;
+}
+function avLogoOk(img){if(img.naturalWidth<32){avLogoBad(img);return;}img.classList.add('ok');}
+function avLogoBad(img){LOGO_BAD.add(img.dataset.dom);img.remove();}
 function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
 function emailById(id){return EMAILS.find(e=>e.id===id);}
 function acctShort(id){const a=ACCOUNTS.find(a=>a.id===id);return a?a.label.split('@')[0]:id;}
@@ -1455,7 +1479,7 @@ function renderPeopleList(){
   if(mode==='recent')list.sort((a,b)=>idx(a)-idx(b));else if(mode==='oldest')list.sort((a,b)=>idx(b)-idx(a));else list.sort((a,b)=>a.name.localeCompare(b.name));
   if(state.search){const q=state.search.toLowerCase();list=list.filter(c=>(c.name+' '+c.email+' '+c.domain).toLowerCase().includes(q));}
   const html=list.map(c=>`<div class="mail-item person ${state.personSel===c.email?'sel':''}" data-person="${esc(c.email)}" role="button" tabindex="0">
-      <span class="m-avatar" style="background:${c.color}">${initials(c.name)}</span>
+      <span class="m-avatar" style="background:${avBg(c.email,c.name)}">${initials(c.name)}${logoTag(c.email)}</span>
       <span class="m-main">
         <span class="m-top"><span class="m-from">${esc(c.name)}${CONTACT_PINS.has(c.email)?' <span class="m-you">pinned</span>':''}</span><span class="m-time">${c.last?c.last.time:''}</span></span>
         <span class="m-subj">${esc(c.email)}</span>
@@ -1481,7 +1505,7 @@ function renderPerson(){
   r.innerHTML=`<div class="note-pane person-pane">
     <div class="r-head"><span class="np-kicker">${ic('person',13)} Contact</span><div class="np-meta"><button class="np-close" id="personClose" aria-label="Close">${ic('close',14)}</button></div></div>
     <div class="r-body">
-      <div class="p-hero"><span class="p-avatar" style="background:${c.color}">${initials(c.name)}</span>
+      <div class="p-hero"><span class="p-avatar" style="background:${avBg(c.email,c.name)}">${initials(c.name)}${logoTag(c.email)}</span>
         <div class="p-id"><div class="p-name">${esc(c.name)}</div><div class="p-email">${esc(c.email)}</div>
           <div class="p-tags"><span class="chip">${esc(c.group||'People')}</span>${[...c.accounts].map(a=>`<span class="note-acct">${esc(acctShort(a))}</span>`).join('')}${c.domain&&c.domain!=='gmail.com'?`<span class="note-acct">${esc(c.domain)}</span>`:''}</div></div></div>
       <div class="p-stats"><div><b>${c.received}</b><span>received</span></div><div><b>${c.sent}</b><span>sent</span></div><div><b>${c.threads.size}</b><span>conversations</span></div><div><b>${c.last?c.last.day:'–'}</b><span>last contact</span></div></div>
@@ -1515,7 +1539,7 @@ function attachToSuggest(input){
     if(!hits.length){close();return;}
     if(!box){box=document.createElement('div');box.className='pop-menu to-suggest';document.body.appendChild(box);}
     const r=input.getBoundingClientRect();box.style.left=r.left+'px';box.style.top=(r.bottom+4)+'px';box.style.minWidth=Math.max(280,r.width)+'px';
-    box.innerHTML='<div class="gp-label">People you have emailed</div>'+hits.map(c=>`<button data-pick="${esc(c.email)}"><span class="m-avatar" style="background:${c.color};width:24px;height:24px;font-size:10px;border-radius:7px">${initials(c.name)}</span><span style="min-width:0"><div style="font-weight:600">${esc(c.name)}</div><div style="font-size:11.5px;color:var(--muted)">${esc(c.email)} · ${c.received+c.sent} emails</div></span></button>`).join('');
+    box.innerHTML='<div class="gp-label">People you have emailed</div>'+hits.map(c=>`<button data-pick="${esc(c.email)}"><span class="m-avatar" style="background:${avBg(c.email,c.name)};width:24px;height:24px;font-size:10px;border-radius:7px">${initials(c.name)}${logoTag(c.email)}</span><span style="min-width:0"><div style="font-weight:600">${esc(c.name)}</div><div style="font-size:11.5px;color:var(--muted)">${esc(c.email)} · ${c.received+c.sent} emails</div></span></button>`).join('');
     box.querySelectorAll('[data-pick]').forEach(b=>b.onmousedown=ev=>{ev.preventDefault();parts[parts.length-1]=b.dataset.pick;input.value=parts.join(', ');close();input.dispatchEvent(new Event('input'));});
   };
   input.addEventListener('input',render);input.addEventListener('focus',render);
@@ -1676,7 +1700,7 @@ function renderSidebar(){
       Object.entries(gr.senders).forEach(([key,s])=>{
         const act=v.type==='sender'&&(v.domain==='gmail.com'?v.name===s.fromName:v.domain===s.domain);
         html+=`<button class="sender-row ${act?'active':''}" data-sender="${esc(key)}" data-sdomain="${s.domain}" data-sname="${esc(s.fromName)}">
-          <span class="s-avatar" style="background:${s.color}">${initials(s.name)}</span>${esc(s.name)}
+          <span class="s-avatar" style="background:${avBg(s.domain==='gmail.com'?s.fromName:s.domain,s.name)}">${initials(s.name)}${s.domain==='gmail.com'?'':logoTag(s.domain)}</span>${esc(s.name)}
           ${s.unread?`<span class="badge">${s.unread}</span>`:''}</button>`;
       });
       html+='</div>';
@@ -1776,7 +1800,7 @@ function renderListInner(){
     return `<div class="mail-item ${(e.read&&!anyUnread)?'read':''} ${state.selected===e.id||threadMsgs(e).some(m=>m.id===state.selected)?'sel':''} ${isBin?'pickable':''} ${picked?'picked':''}" data-open="${e.id}" data-tk="${esc(threadKey(e))}" role="button" tabindex="0">
       ${isBin?`<span class="pick-box" data-pick="1" aria-label="Select">${picked?ic('tick',11):''}</span>`:''}
       ${anyUnread?'<span class="unread-dot"></span>':''}
-      <span class="m-avatar p-click" data-personopen="${esc(face.fromEmail)}" data-tip="Contact|Open ${esc(face.fromName)}'s card." style="background:${face.domain==='gmail.com'?'#34c759':sn.color}">${initials(face.fromName)}</span>
+      <span class="m-avatar p-click" data-personopen="${esc(face.fromEmail)}" data-tip="Contact|Open ${esc(face.fromName)}'s card." style="background:${avBg(face.fromEmail,face.fromName)}">${initials(face.fromName)}${logoTag(face.fromEmail)}</span>
       <span class="m-main">
         <span class="m-top"><span class="m-from">${esc(face.fromName)}${e.me?' <span class="m-you">you replied</span>':''}</span>${n>1?`<span class="m-count" data-tip="Conversation|${n} emails in this thread. They move together between Active, Done, Junk, Spam and Bin.">${n}</span>`:''}<span class="m-time">${e.time}</span></span>
         <span class="m-subj">${esc(e.subject)}</span>
@@ -1872,7 +1896,7 @@ function binBarHtml(list){
     <div class="bin-row bin-quick"><span class="bin-q-l">Quick select</span>
       <button class="chip-btn" data-binq="promo">Promotions</button><button class="chip-btn" data-binq="old">Older than 1 year</button><button class="chip-btn" data-binq="never">Never replied to</button><button class="chip-btn" data-binq="att">With attachments</button>
       <span class="bin-hint">Click the circles, drag down the list to select many, ⌘-click or Shift-click like in Finder, ⌘A for all, Delete key to delete.</span></div>
-    ${BINSEL.cleanOpen?`<div class="bin-clean">${cleanupGroups(list).map((x,i)=>`<div class="bc-row"><span class="m-avatar" style="width:30px;height:30px;font-size:11px;background:#8e8e93">${initials(x.name)}</span><span class="bc-main"><b>${esc(x.name)}</b> <span class="bc-n">${x.n} · ~${fmtSize(x.size)}</span><span class="bc-why">${x.why.map(esc).join(' · ')||'lots of mail from one sender'}</span></span><button class="set-btn" data-bcsel="${i}">Select ${x.n}</button></div>`).join('')||'<div class="bin-hint">Nothing obvious stands out. Try the quick-select buttons above.</div>'}</div>`:''}
+    ${BINSEL.cleanOpen?`<div class="bin-clean">${cleanupGroups(list).map((x,i)=>`<div class="bc-row"><span class="m-avatar" style="width:30px;height:30px;font-size:11px;background:${avBg(x.email,x.name)}">${initials(x.name)}${logoTag(x.email)}</span><span class="bc-main"><b>${esc(x.name)}</b> <span class="bc-n">${x.n} · ~${fmtSize(x.size)}</span><span class="bc-why">${x.why.map(esc).join(' · ')||'lots of mail from one sender'}</span></span><button class="set-btn" data-bcsel="${i}">Select ${x.n}</button></div>`).join('')||'<div class="bin-hint">Nothing obvious stands out. Try the quick-select buttons above.</div>'}</div>`:''}
   </div>`;
   return head;
 }
@@ -2040,7 +2064,7 @@ function renderReader(){
           :`<button class="tool" id="restoreBtn" data-tip="Restore|Put this back in the inbox.">${ic('restore',13)} Inbox</button>`+DESTS.filter(d=>d!=='active'&&d!==e.state).map(d=>`<button class="tool" data-mvto="${d}" data-tip="${TIPS[d]}">${ic(DEST_ICON[d],13)} ${DEST_LABEL[d]}</button>`).join('')}`}
       </div>
       ${msgs.length>1?`<div class="thread-note">${ic('reply',12)} Conversation with ${esc(threadFace(e).fromName)} · ${msgs.length} emails · they move together</div>`:`<div class="r-fromrow">
-        <span class="m-avatar p-click" data-personopen="${esc(e.fromEmail)}" data-tip="Contact|Open ${esc(e.fromName)}'s card: details, notes, every email." style="background:${e.domain==='gmail.com'?'#34c759':sn.color}">${initials(e.fromName)}</span>
+        <span class="m-avatar p-click" data-personopen="${esc(e.fromEmail)}" data-tip="Contact|Open ${esc(e.fromName)}'s card: details, notes, every email." style="background:${avBg(e.fromEmail,e.fromName)}">${initials(e.fromName)}${logoTag(e.fromEmail)}</span>
         <span class="r-frommeta">
           <div class="r-fromname p-click" data-personopen="${esc(e.fromEmail)}">${esc(e.fromName)}</div>
           <div class="r-fromaddr">${esc(e.fromEmail)} · to ${esc(ACCOUNTS.find(a=>a.id===e.account).label)}</div>
@@ -2056,7 +2080,7 @@ function renderReader(){
     ${(e.attachments&&e.attachments.length)?`<div class="attach-row" style="padding:10px 20px 0">${e.attachments.map(a=>`<span class="att-chip">${ic('clip',11)} ${esc(a.name)} <span class="att-size">${fmtSize(a.size||0)}</span></span>`).join('')}</div>`:''}
     <div class="gist-strip">${ic('sparkle',13)} <span style="flex:1"><b>AI gist:</b> <span id="gistText">${esc(e.gist)}</span></span><button class="gist-mini" id="regist" data-tip="Re-gist|Write a fresh 3 to 9 word summary using the on-device AI.">${ic('sparkle',11)} Re-gist</button><button class="gist-mini" id="listenBtn" data-tip="Listen|Reads the email out loud in your chosen voice. Press again to stop.">${ic('wave',11)} Listen</button><button class="gist-mini rate-btn" id="rateBtn" data-tip="Speed|Reading speed. Click to cycle 1×, 1.15×, 1.3×, 1.5×. Same pitch, just a touch faster. It remembers.">${readRate()}×</button></div>
     ${msgs.length>1?`<div class="r-body thread">${msgs.map((m,i)=>{const last=i===msgs.length-1;const msn=senderOf(m);return `<div class="tmsg ${last?'open':''} ${m.me?'me':''}" data-tmsg="${m.id}">
-        <div class="tmsg-head"><span class="m-avatar ${m.me?'':'p-click'}" ${m.me?'':`data-personopen="${esc(m.fromEmail)}"`} style="background:${m.me?'var(--accent)':(m.domain==='gmail.com'?'#34c759':msn.color)}">${m.me?'L':initials(m.fromName)}</span>
+        <div class="tmsg-head"><span class="m-avatar ${m.me?'':'p-click'}" ${m.me?'':`data-personopen="${esc(m.fromEmail)}"`} style="background:${m.me?'var(--accent)':avBg(m.fromEmail,m.fromName)}">${m.me?'L':initials(m.fromName)+logoTag(m.fromEmail)}</span>
           <span class="r-frommeta"><div class="r-fromname">${m.me?'You':esc(m.fromName)}</div><div class="r-fromaddr">${last||true?esc(m.me?'to '+esc(threadFace(e).fromEmail):m.fromEmail+' · to '+ACCOUNTS.find(a=>a.id===m.account).label):''}</div></span>
           <span class="tmsg-prev">${esc(m.snippet)}</span>
           <span class="r-date">${m.day===m.time?m.day:m.day+(m.time==="Now"?" · now":" · "+m.time)}</span></div>
@@ -2151,7 +2175,7 @@ function renderNotePane(){
       <textarea class="note-edit" id="noteEdit" placeholder="Write your note…" maxlength="1000">${esc(n.text)}</textarea>
       ${e?`<div><div class="np-label" style="margin-bottom:8px">Linked email</div>
         <div class="np-email">
-          <span class="m-avatar" style="background:${e.domain==='gmail.com'?'#34c759':sn.color}">${initials(e.fromName)}</span>
+          <span class="m-avatar" style="background:${avBg(e.fromEmail,e.fromName)}">${initials(e.fromName)}${logoTag(e.fromEmail)}</span>
           <div class="m-main">
             <div class="np-from">${esc(e.fromName)} <span style="color:var(--muted);font-weight:400">· ${e.day}</span></div>
             <div class="np-subj">${esc(e.subject)}</div>
@@ -2196,7 +2220,7 @@ function openPicker(n){
     const ql=(q||'').toLowerCase();
     const list=scope.filter(e=>!ql||(e.fromName+' '+e.subject+' '+e.snippet+' '+e.gist).toLowerCase().includes(ql));
     pk.querySelector('.pk-list').innerHTML=list.map(e=>{const sn=senderOf(e);return `<button class="pk-item ${n.emailId===e.id?'cur':''}" data-pick="${e.id}">
-      <span class="m-avatar" style="background:${e.domain==='gmail.com'?'#34c759':sn.color}">${initials(e.fromName)}</span>
+      <span class="m-avatar" style="background:${avBg(e.fromEmail,e.fromName)}">${initials(e.fromName)}${logoTag(e.fromEmail)}</span>
       <span class="m-main">
         <span class="m-top"><span class="m-from">${esc(e.fromName)}</span>${(!n.account||acct==='all')?`<span class="note-acct">${esc(acctShort(e.account))}</span>`:''}<span class="m-time">${e.day}</span></span>
         <span class="m-subj">${esc(e.subject)}</span>
@@ -2249,7 +2273,7 @@ function renderTriage(){
   const cardsHtml=deck.slice(0,3).map((e,i)=>{
     const sn=senderOf(e);
     return `<div class="card" data-card="${e.id}" style="z-index:${10-i};transform:translateY(${i*10}px) scale(${1-i*.04})">
-      <div class="c-from"><span class="m-avatar" style="background:${e.domain==='gmail.com'?'#34c759':sn.color}">${initials(e.fromName)}</span>
+      <div class="c-from"><span class="m-avatar" style="background:${avBg(e.fromEmail,e.fromName)}">${initials(e.fromName)}${logoTag(e.fromEmail)}</span>
         <span><div class="r-fromname">${esc(e.fromName)}</div><div class="r-fromaddr">auto-filed → ${groupOf(e)} · ${esc(acctShort(e.account))}</div></span></div>
       <div class="c-subj">${esc(e.subject)}</div>
       <div class="c-gist">${ic('sparkle',11)} ${esc(e.gist)}</div>
@@ -3143,13 +3167,34 @@ const Gmail={
     this.accounts.forEach(a=>ACCOUNTS.push({id:a.id,label:a.email,color:a.color,demo:false}));
     if(!ACCOUNTS.some(a=>a.id===state.account))state.account='all';
   },
+  // Gmail allows roughly 250 "units" per second per user. Stay well under it
+  // (a message read costs 5, a send 100) and, if Google still says slow down,
+  // wait and try again rather than give up.
+  cost(path,opts){const m=(opts&&opts.method)||'GET';if(/messages\/send/.test(path))return 100;if(/^history/.test(path))return 2;if(m!=='GET')return 10;return 5;},
+  async pace(acc,units){const rate=110/1000;const now=Date.now();acc._next=Math.max(acc._next||0,now);const wait=acc._next-now;acc._next+=units/rate;if(wait>0)await new Promise(r=>setTimeout(r,wait));},
   async api(acc,path,opts){
     opts=opts||{};
+    for(let attempt=0;;attempt++){
+      await this.pace(acc,this.cost(path,opts));
+      try{return await this.api1(acc,path,opts);}
+      catch(err){
+        const busy=err.status===429||(err.status===403&&/rate|quota|limit/i.test(err.message))||err.status>=500||err.network;
+        const unsafe=/messages\/send/.test(path)&&!(err.status===429||err.status===403);
+        if(!busy||unsafe||attempt>=7)throw err;
+        const wait=Math.min(64000,2000*Math.pow(2,attempt))+Math.random()*1000;
+        acc._next=Math.max(acc._next||0,Date.now()+wait);
+        this.slowNote(acc,wait);
+        await new Promise(r=>setTimeout(r,wait));
+      }
+    }
+  },
+  slowNote(acc,wait){const S=this.sync[acc.id];if(S){S.slow=Date.now()+wait;this.paintProgress();}},
+  async api1(acc,path,opts){
     if(Date.now()>acc.exp){try{const t=await this.token(acc.email,false);Object.assign(acc,t);this.save();}catch(e){}}
     const go=async()=>fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,Object.assign({},opts,{headers:Object.assign({Authorization:'Bearer '+acc.token,'Content-Type':'application/json'},opts.headers||{})}));
-    let r=await go();
-    if(r.status===401){const t=await this.token(acc.email,false);Object.assign(acc,t);this.save();r=await go();}
-    if(!r.ok){let msg='Gmail error '+r.status;try{const j=await r.json();msg=(j.error&&j.error.message)||msg;}catch(e){}throw new Error(msg);}
+    let r;try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}
+    if(r.status===401){const t=await this.token(acc.email,false);Object.assign(acc,t);this.save();try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}}
+    if(!r.ok){let msg='Gmail error '+r.status;try{const j=await r.json();msg=(j.error&&j.error.message)||msg;}catch(e){}const x=new Error(msg);x.status=r.status;throw x;}
     if(r.status===204)return null;
     return r.json();
   },
@@ -3258,7 +3303,7 @@ const Gmail={
   async pull(acc,ids){
     const added=[];
     for(let i=0;i<ids.length;i+=10){
-      const batch=await Promise.all(ids.slice(i,i+10).map(id=>this.api(acc,'messages/'+id+'?format=full').catch(()=>null)));
+      const batch=await Promise.all(ids.slice(i,i+10).map(id=>this.api(acc,'messages/'+id+'?format=full').catch(err=>{if(err.status===404)return null;throw err;})));
       const got=batch.filter(Boolean).map(m=>mk(this.toEmail(acc,m)));
       got.forEach(e=>{EMAILS.push(e);added.push(e);});
       Store.putMany(got).catch(()=>{});
@@ -3269,7 +3314,7 @@ const Gmail={
     const S=this.sync[acc.id]=this.sync[acc.id]||{done:false,total:0,fetched:0,token:null,running:false};
     if(S.running||S.done)return;S.running=true;S.error=null;
     try{
-      const saved=await Store.getMeta('sync:'+acc.id);if(saved){Object.assign(S,saved,{running:true});}
+      const saved=await Store.getMeta('sync:'+acc.id);if(saved){Object.assign(S,saved,{running:true});if(saved.v!==2){S.token=null;S.done=false;}}
       if(S.done){S.running=false;return;}
       if(!S.total){try{const prof=await this.api(acc,'profile');S.total=prof.messagesTotal||0;}catch(e){}}
       S.fetched=EMAILS.filter(e=>e.account===acc.id&&e.gid).length;
@@ -3283,28 +3328,31 @@ const Gmail={
         await this.pull(acc,fresh);
         S.fetched=EMAILS.filter(e=>e.account===acc.id&&e.gid).length;
         S.token=r.nextPageToken||null;if(!S.token)S.done=true;
-        await Store.setMeta('sync:'+acc.id,{done:S.done,total:S.total,fetched:S.fetched,token:S.token});
+        await Store.setMeta('sync:'+acc.id,{v:2,done:S.done,total:S.total,fetched:S.fetched,token:S.token});
         pages++;
         if(pages%3===0){EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));renderAll();}
         this.paintProgress();
-        await new Promise(r=>setTimeout(r,150));
       }
       EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));renderAll();
       if(S.done)toast('All of '+acc.email+' is on this device','tick',S.fetched.toLocaleString()+' emails. New ones arrive as they come.');
-    }catch(err){S.error=err.message;toast('Sync paused for '+acc.email,'bell',err.message+'. It will carry on next time the app is open.');}
+    }catch(err){
+      S.error=err.message;
+      if(!S.warned){S.warned=true;toast('Download paused for '+acc.email,'bell','Gmail asked SmartMail to slow down. It will pick up again by itself in a minute, nothing is skipped.');}
+      clearTimeout(S.retryT);S.retryT=setTimeout(()=>{S.retryT=null;if(this.accounts.includes(acc))this.backfill(acc);},60000);
+    }
     S.running=false;this.paintProgress();
   },
   progress(){
     const list=this.accounts.map(a=>this.sync[a.id]||{});
-    const running=list.filter(s=>s.running).length;if(!running)return null;
+    const running=list.filter(s=>s.running||s.retryT).length;if(!running)return null;const slow=list.some(s=>s.retryT||(s.slow&&s.slow>Date.now()));
     const fetched=list.reduce((n,s)=>n+(s.fetched||0),0),total=list.reduce((n,s)=>n+(s.total||0),0);
-    return {fetched,total,running,pct:total?Math.min(99,Math.round(fetched/total*100)):0};
+    return {fetched,total,running,slow,pct:total?Math.min(99,Math.round(fetched/total*100)):0};
   },
   paintProgress(){
     let el=$('syncPill');const p=this.progress();
     if(!p){if(el)el.remove();return;}
     if(!el){el=document.createElement('div');el.id='syncPill';el.className='sync-pill';el.dataset.tip='Syncing|Downloading your whole history to this device, oldest last. You can use the app while it runs. It carries on next time if you close it.';$('listTitle').insertAdjacentElement('afterend',el);}
-    el.innerHTML=`<span class="sync-dot"></span>${p.fetched.toLocaleString()}${p.total?' of ~'+p.total.toLocaleString():''} emails · ${p.pct}%`;
+    el.innerHTML=`<span class="sync-dot"></span>${p.fetched.toLocaleString()}${p.total?' of ~'+p.total.toLocaleString():''} emails · ${p.pct}%${p.slow?' · pausing for Gmail':''}`;
   },
   accFor(e){return this.accounts.find(a=>a.id===e.account);},
   async modify(e,body,wholeThread){
