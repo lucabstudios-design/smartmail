@@ -245,6 +245,7 @@ svg{vertical-align:-2px;flex:none}
 .seg button{position:relative;z-index:1;flex:1;font-size:11.5px;font-weight:600;color:var(--muted);padding:4px 0;border-radius:8px;transition:color .3s}
 .seg button.on{color:#fff}
 .enter>*{animation:itemIn .42s cubic-bezier(.2,.85,.25,1) both;animation-delay:calc(var(--i,0)*24ms)}
+.enter>*:nth-child(n+13){animation:none}
 @keyframes itemIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .list-scroll{flex:1;overflow-y:auto;overflow-x:hidden;min-height:0;padding:8px}
 .empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
@@ -958,6 +959,7 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 .m-avatar,.p-avatar,.s-avatar{position:relative;overflow:hidden}
 .av-logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:16%;background:#fff;opacity:0;transition:opacity .25s;box-sizing:border-box;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(20,40,80,.1)}
 .av-logo.ok{opacity:1}
+.av-logo.seen{transition:none}
 .pill-mini{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--subtle);color:var(--muted)}
 .pill-mini.ok{background:rgba(52,199,89,.14);color:#1f9d47}
 .bulk-banner{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 10px;border-radius:18px;background:linear-gradient(135deg,rgba(10,132,255,.10),rgba(94,92,230,.08));border:1px solid rgba(10,132,255,.18)}
@@ -1030,6 +1032,60 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 @keyframes ssSpin{to{transform:rotate(360deg)}}
 @media (max-width:1100px){.sync-stat .ss-last{display:none}}
 @media (max-width:760px){.sync-stat .ss-txt{display:none}.sync-stat{margin-left:4px;padding:6px}}
+.skel-wrap{display:flex;flex-direction:column;gap:10px;padding:2px}
+.skel-row{display:flex;gap:14px;padding:16px;border-radius:18px;background:var(--glass-strong);border:1px solid var(--stroke);opacity:0;animation:skIn .4s var(--fluid) forwards;animation-delay:var(--d)}
+.skel-av{width:36px;height:36px;border-radius:12px;flex:none}
+.skel-lines{flex:1;display:flex;flex-direction:column;gap:8px;padding-top:2px}
+.skel-lines span{height:10px;border-radius:6px}
+.skel-av,.skel-lines span{background:linear-gradient(90deg,rgba(20,40,80,.06) 25%,rgba(20,40,80,.11) 50%,rgba(20,40,80,.06) 75%);background-size:300% 100%;animation:skSh 1.3s linear infinite}
+@keyframes skSh{from{background-position:100% 0}to{background-position:-200% 0}}
+@keyframes skIn{to{opacity:1}}
+.read-bar{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);opacity:0;z-index:330;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:999px;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--stroke);box-shadow:0 18px 40px -16px rgba(20,40,90,.45);transition:opacity .25s,transform .35s var(--fluid);max-width:min(560px,calc(100vw - 24px))}
+.read-bar.show{opacity:1;transform:translate(-50%,0)}
+.rb-wave{display:flex;align-items:center;gap:3px;height:18px;color:var(--accent)}
+.rb-wave i{width:3px;border-radius:2px;background:currentColor;animation:rbW 1s ease-in-out infinite}
+.rb-wave i:nth-child(2){animation-delay:.15s}.rb-wave i:nth-child(3){animation-delay:.3s}.rb-wave i:nth-child(4){animation-delay:.45s}
+@keyframes rbW{0%,100%{height:5px}50%{height:17px}}
+.rb-txt{display:flex;flex-direction:column;min-width:0;font-size:12.5px}
+.rb-txt span{color:var(--muted);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.rb-rate{font-size:12px;font-weight:700;padding:7px 10px;border-radius:999px;background:var(--subtle);color:var(--ink2)}
+.rb-stop{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:999px;background:#ff3b30;color:#fff}
+.rb-stop:hover{filter:brightness(1.08)}
+.speed-wrap .speed-card-wrap{width:min(860px,96vw);max-height:94vh;overflow-y:auto;background:rgba(250,252,255,.98);border-radius:26px;box-shadow:0 30px 80px -30px rgba(20,40,90,.45),0 0 0 1px rgba(255,255,255,.7);padding:22px 24px 16px;transform:translateY(10px) scale(.985);transition:transform .35s var(--fluid)}
+.speed-wrap.show .speed-card-wrap{transform:none}
+.sp-head{display:flex;align-items:flex-start;gap:14px}.sp-head>div{flex:1;min-width:0}
+.sp-head h2{margin:0;font-size:22px;letter-spacing:-.02em}.sp-head p{margin:4px 0 0;color:var(--muted);font-size:12.5px}
+.sp-bar{height:6px;border-radius:6px;background:var(--subtle);margin:12px 0 16px;overflow:hidden}.sp-bar span{display:block;height:100%;background:linear-gradient(90deg,#34c759,#0a84ff);border-radius:6px;transition:width .4s var(--fluid)}
+.sp-card{display:flex;flex-direction:column;gap:12px}
+.sp-card.in{animation:spIn .28s var(--fluid)}
+@keyframes spIn{from{opacity:.2;transform:translateX(14px)}to{opacity:1;transform:none}}
+.sp-who{display:flex;align-items:center;gap:14px}
+.sp-av{width:54px!important;height:54px!important;border-radius:16px!important;font-size:19px!important}
+.sp-name{flex:1;min-width:0;display:flex;flex-direction:column}.sp-name b{font-size:19px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sp-name span{color:var(--muted);font-size:12.5px}
+.sp-count{text-align:right;display:flex;flex-direction:column}.sp-count b{font-size:24px;font-variant-numeric:tabular-nums}.sp-count span{color:var(--muted);font-size:11.5px}
+.sp-where{font-size:12px;color:var(--muted)}
+.sp-recent{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:14px;background:var(--subtle)}
+.sp-recent div{display:flex;gap:10px;font-size:12.5px;padding:3px 0}.sp-subj{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sp-date{color:var(--muted);font-size:11.5px;flex:none}
+.sp-sug{font-size:12.5px;color:var(--ink2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sp-label{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:2px}.sp-label span{text-transform:none;letter-spacing:0;font-weight:500}
+.sp-groups{display:flex;flex-wrap:wrap;gap:6px}
+.sp-g{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:12px;background:var(--subtle);font-size:12.5px;font-weight:600;color:var(--ink2);transition:background .15s,color .15s}
+.sp-g:hover{background:var(--accent-soft);color:var(--accent)}.sp-g.on{background:var(--accent);color:#fff}.sp-g.on .kbd{background:rgba(255,255,255,.25);color:#fff;border-color:transparent}
+.sp-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sp-a{display:flex;align-items:center;gap:8px;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--stroke);font-size:13.5px;font-weight:700;color:var(--ink);transition:transform .12s,box-shadow .15s,border-color .15s}
+.sp-a:hover{transform:translateY(-1px);box-shadow:0 8px 20px -12px rgba(20,40,90,.35)}
+.sp-a.sug{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.sp-a.spa-junk,.sp-a.spa-spam,.sp-a.spa-bin{color:#c0392b}
+.kbd{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:5px;font-size:10.5px;font-weight:700;background:#fff;border:1px solid var(--stroke);color:var(--muted);box-shadow:0 1px 0 rgba(20,40,80,.08)}
+.sp-a .kbd{min-width:20px;height:20px}
+.sp-foot{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted)}
+.sp-foot>span{display:inline-flex;align-items:center;gap:6px}.sp-rules{margin-left:auto}
+.sp-finish{display:flex;flex-direction:column;gap:10px;padding:6px 0}.sp-finish h3{margin:0;font-size:18px}.sp-finish p{margin:0;color:var(--muted);font-size:13px}
+.sp-fin{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:14px 16px;border-radius:16px;background:#fff;border:1px solid var(--stroke);font-size:13.5px}
+.sp-fin span{color:var(--muted);font-size:12px}.sp-fin:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.sp-done{align-items:center;text-align:center;padding:30px 0;color:#1f9d47}.sp-done h3{color:var(--ink)}
+.sp-hint{font-size:12px!important}
+@media (max-width:760px){.sp-acts{grid-template-columns:repeat(2,1fr)}.sp-rules{margin-left:0}.speed-wrap .speed-card-wrap{padding:18px 16px}}
 </style>
 
 <div class="app" id="app">
@@ -1380,14 +1436,24 @@ function renderSigBlock(){
 function updateSigBtn(){const b=$('sigBtn');if(!b)return;const a=currentComposeAccount();const sig=sigFor(a);b.hidden=!(sig&&sig.name);b.classList.toggle('on',SIG_ON);b.innerHTML=ic('sig',13)+(SIG_ON?' Signature on':' Add signature');}
 function applyAutoSignature(){const a=currentComposeAccount();const sig=sigFor(a);SIG_ON=!!(sig&&sig.name&&sig.auto);renderSigBlock();updateSigBtn();}
 function toggleSignature(){const a=currentComposeAccount();const sig=sigFor(a);if(!sig||!sig.name){toast('No signature for this account yet','sig','Make one in Settings → Signatures.');return;}SIG_ON=!SIG_ON;renderSigBlock();updateSigBtn();if(SIG_ON){const t=getBody();const t2=t.replace(/\n\n(Best|Kind regards|Thanks|Regards|Cheers),\nLuca$/,'');if(t2!==t)setBody(t2);}}
-const PREFS={notif:true,sound:true,badge:true,gistAlert:true,theme:'auto',acctNotif:{},undoSecs:60,keep:'Everything'};
+const PREFS={autoGroup:false,notif:true,sound:true,badge:true,gistAlert:true,theme:'auto',acctNotif:{},undoSecs:60,keep:'Everything'};
 let lastListKey='';
 state.personSel=null;
 const $=id=>document.getElementById(id);
 
 /* ============ HELPERS ============ */
 function threadKey(e){return e.thread||('t'+e.id);}
-function threadMsgs(e){const k=threadKey(e);return EMAILS.filter(x=>threadKey(x)===k).slice().reverse();} // oldest first
+// Thread index: built once per render instead of scanning every email for every email.
+let TIDX=null,TIDX_LEN=-1,TIDX_A=null,TIDX_Z=null;const GCACHE=new Map();
+function invalidateThreads(){TIDX=null;GCACHE.clear();}
+let UGROUPS=null;function usedGroups(){const idx=tindex();if(UGROUPS&&UGROUPS.idx===idx)return UGROUPS.set;const set=new Set();EMAILS.forEach(x=>set.add(groupOf(x)));UGROUPS={idx,set};return set;}
+function tindex(){
+  const n=EMAILS.length;
+  if(TIDX&&TIDX_LEN===n&&TIDX_A===EMAILS[0]&&TIDX_Z===EMAILS[n-1])return TIDX;
+  const m=new Map();for(let i=n-1;i>=0;i--){const x=EMAILS[i];const k=threadKey(x);let a=m.get(k);if(!a)m.set(k,a=[]);a.push(x);}
+  TIDX=m;TIDX_LEN=n;TIDX_A=EMAILS[0];TIDX_Z=EMAILS[n-1];GCACHE.clear();return m;
+}
+function threadMsgs(e){const a=tindex().get(threadKey(e));return a&&a.includes(e)?a.slice():[e];} // oldest first
 function threadLatest(e){const m=threadMsgs(e);return m[m.length-1];}
 function threadFace(e){const m=threadMsgs(e).filter(x=>!x.me);return m.length?m[m.length-1]:e;} // the other person, for name/avatar/group
 function threadCount(e){return threadMsgs(e).length;}
@@ -1430,9 +1496,16 @@ function autoGroup(e){
 function senderKey(e){return isPersonalDomain(e.domain)?('p:'+e.fromName):e.domain;}
 function senderDisplayName(e){return e.domain==='gmail.com'?e.fromName:senderOf(e).name;}
 function groupOf(e){
+  tindex();const c=GCACHE.get(e);if(c!==undefined)return c;const g=groupOf0(e);GCACHE.set(e,g);return g;
+}
+const NOGROUP='Unsorted';
+function gLabel(g){return g===NOGROUP?'Inbox':g;}
+function suggestGroup(e){return GROUP_OVERRIDES[senderKey(e)]||(isPersonalDomain(e.domain)?'People':senderOf(e).group);}
+function groupOf0(e){
   if(e.me){const f=threadFace(e);if(f!==e)return groupOf(f);}
   const o=GROUP_OVERRIDES[senderKey(e)];
   if(o)return o;
+  if(Gmail.on&&!PREFS.autoGroup)return NOGROUP; // you choose groups yourself (Speed sort / Bulk sort)
   return isPersonalDomain(e.domain)?'People':senderOf(e).group;
 }
 function allGroups(){return [...BASE_GROUPS,...CUSTOM_GROUPS];}
@@ -1455,9 +1528,10 @@ function rootDomain(email){
 const LOGO_BAD=new Set();
 function logoTag(email){
   const d=rootDomain(email);if(!d||PERSONAL_DOMAINS.has(d)||LOGO_BAD.has(d))return '';
-  return `<img class="av-logo" alt="" loading="lazy" referrerpolicy="no-referrer" data-dom="${d}" src="https://www.google.com/s2/favicons?domain=${d}&sz=128" onload="avLogoOk(this)" onerror="avLogoBad(this)">`;
+  return `<img class="av-logo${LOGO_OK.has(d)?' ok seen':''}" alt="" loading="lazy" referrerpolicy="no-referrer" data-dom="${d}" src="https://www.google.com/s2/favicons?domain=${d}&sz=128" onload="avLogoOk(this)" onerror="avLogoBad(this)">`;
 }
-function avLogoOk(img){if(img.naturalWidth<32){avLogoBad(img);return;}img.classList.add('ok');}
+const LOGO_OK=new Set();
+function avLogoOk(img){if(img.naturalWidth<32){avLogoBad(img);return;}LOGO_OK.add(img.dataset.dom);img.classList.add('ok');}
 function avLogoBad(img){LOGO_BAD.add(img.dataset.dom);img.remove();}
 function initials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
 function emailById(id){return EMAILS.find(e=>e.id===id);}
@@ -1509,18 +1583,35 @@ function placementHistory(){
   DECISIONS.forEach(d=>rows.push(Object.assign({},d,{w:2})));
   return rows;
 }
+// The model is counted once per screen draw, not once per email on screen.
+let PMODEL=null;
+function placementModel(){
+  const idx=tindex();
+  if(PMODEL&&PMODEL.idx===idx&&PMODEL.dl===DECISIONS.length)return PMODEL;
+  const cnt=()=>{const o={};DESTS.forEach(d=>o[d]=0);o._n=0;return o;};
+  const M={idx,dl:DECISIONS.length,prior:cnt(),sender:new Map(),domain:new Map(),group:new Map(),tok:new Map(),cnt};
+  const add=(map,k,dest,w)=>{let c=map.get(k);if(!c)map.set(k,c=cnt());c[dest]+=w;c._n+=w;};
+  placementHistory().forEach(r=>{
+    M.prior[r.dest]+=r.w;M.prior._n+=r.w;
+    add(M.sender,r.sender,r.dest,r.w);add(M.domain,r.domain,r.dest,r.w);add(M.group,r.group,r.dest,r.w);
+    r.toks.forEach(t=>add(M.tok,t,r.dest,r.w));
+  });
+  return PMODEL=M;
+}
 function suggestPlacement(e){
-  const rows=placementHistory().filter(r=>r.id!==e.id);
+  const M=placementModel();const cnt=M.cnt;
   const A=0.5,K=DESTS.length;
-  const cnt=k=>{const o={};DESTS.forEach(d=>o[d]=0);o._n=0;return o;};
-  const prior=cnt(),bySender=cnt(),byDomain=cnt(),byGroup=cnt(),byTok={};
   const sk=senderKey(e),dom=e.domain,grp=groupOf(e),toks=tokensOf(e);
-  rows.forEach(r=>{
-    prior[r.dest]+=r.w;prior._n+=r.w;
-    if(r.sender===sk){bySender[r.dest]+=r.w;bySender._n+=r.w;}
-    if(r.domain===dom){byDomain[r.dest]+=r.w;byDomain._n+=r.w;}
-    if(r.group===grp){byGroup[r.dest]+=r.w;byGroup._n+=r.w;}
-    r.toks.forEach(t=>{if(toks.includes(t)){byTok[t]=byTok[t]||cnt();byTok[t][r.dest]+=r.w;byTok[t]._n+=r.w;}});
+  const copy=c=>{const o=cnt();if(c){DESTS.forEach(d=>o[d]=c[d]);o._n=c._n;}return o;};
+  const prior=copy(M.prior),bySender=copy(M.sender.get(sk)),byDomain=copy(M.domain.get(dom)),byGroup=copy(M.group.get(grp)),byTok={};
+  new Set(toks).forEach(t=>{const c=M.tok.get(t);if(c)byTok[t]=copy(c);});
+  // leave this email's own past decisions out, as before
+  DECISIONS.forEach(r=>{if(r.id!==e.id)return;const w=2;
+    prior[r.dest]-=w;prior._n-=w;
+    if(r.sender===sk){bySender[r.dest]-=w;bySender._n-=w;}
+    if(r.domain===dom){byDomain[r.dest]-=w;byDomain._n-=w;}
+    if(r.group===grp){byGroup[r.dest]-=w;byGroup._n-=w;}
+    (r.toks||[]).forEach(t=>{if(byTok[t]){byTok[t][r.dest]-=w;byTok[t]._n-=w;}});
   });
   const lp=(c,d)=>Math.log((c[d]+A)/(c._n+A*K));
   const scores={},why={};
@@ -1569,8 +1660,8 @@ function suggestHtml(e,compact){
   const sg=suggestPlacement(e);
   const pct=Math.round(sg.conf*100);
   const cur=groupOf(e);
-  const groups=[cur,...allGroups().filter(g=>g!==cur&&EMAILS.some(x=>groupOf(x)===g))];
-  const opts=`<optgroup label="Keep in Active, filed under">${groups.map(g=>`<option value="g:${esc(g)}" ${sg.dest==='active'&&g===cur?'selected':''}>${g===cur?'Keep in '+esc(g):'Move to '+esc(g)}</option>`).join('')}</optgroup><optgroup label="Or put it away">${DESTS.filter(d=>d!=='active').map(d=>`<option value="s:${d}" ${d===sg.dest?'selected':''}>${DEST_LABEL[d]}</option>`).join('')}</optgroup>`;
+  const groups=[cur,...allGroups().filter(g=>g!==cur&&usedGroups().has(g))];
+  const opts=`<optgroup label="Keep in Active, filed under">${groups.map(g=>`<option value="g:${esc(g)}" ${sg.dest==='active'&&g===cur?'selected':''}>${g===cur?'Keep in '+esc(gLabel(g)):'Move to '+esc(gLabel(g))}</option>`).join('')}</optgroup><optgroup label="Or put it away">${DESTS.filter(d=>d!=='active').map(d=>`<option value="s:${d}" ${d===sg.dest?'selected':''}>${DEST_LABEL[d]}</option>`).join('')}</optgroup>`;
   return `<span class="sugg ${compact?'compact':''} conf-${pct>=75?'hi':pct>=50?'mid':'lo'}" data-sugg="${e.id}">
     <span class="sg-ico">${ic('magic',12)}</span>
     <span class="sg-text"><span class="sg-pct">${pct}%</span></span>
@@ -1591,7 +1682,13 @@ function wireSuggest(root){
 
 /* ============ PEOPLE (everyone you have emailed or heard from) ============ */
 const CONTACT_NOTES={};const CONTACT_PINS=new Set();
+let CSCOPE=null;
 function contactsInScope(){
+  const idx=tindex();const key=state.account+'|'+NOTES.length+'|'+Object.keys(CONTACT_NOTES).length;
+  if(CSCOPE&&CSCOPE.idx===idx&&CSCOPE.key===key)return CSCOPE.list.slice();
+  const list=contactsInScope0();CSCOPE={idx,key,list};return list.slice();
+}
+function contactsInScope0(){
   const map={};
   const add=(email,name,e,dir)=>{
     if(!email)return;const k=email.toLowerCase();
@@ -1616,9 +1713,10 @@ function contactByEmail(email){return contactsInScope().find(c=>c.email===(email
 function renderPeopleList(){
   let list=contactsInScope();
   const mode=state.peopleSort||'recent';
-  const idx=c=>c.last?EMAILS.indexOf(c.last):1e9;
+  const idx=c=>c.last?-(c.last.ts||0):1e18;
   if(mode==='recent')list.sort((a,b)=>idx(a)-idx(b));else if(mode==='oldest')list.sort((a,b)=>idx(b)-idx(a));else list.sort((a,b)=>a.name.localeCompare(b.name));
   if(state.search){const q=state.search.toLowerCase();list=list.filter(c=>(c.name+' '+c.email+' '+c.domain).toLowerCase().includes(q));}
+  const PL=state.peopleLimit||150;const more=list.length-PL;list=list.slice(0,PL);
   const html=list.map(c=>`<div class="mail-item person ${state.personSel===c.email?'sel':''}" data-person="${esc(c.email)}" role="button" tabindex="0">
       <span class="m-avatar" style="background:${avBg(c.email,c.name)}">${initials(c.name)}${logoTag(c.email)}</span>
       <span class="m-main">
@@ -1627,9 +1725,10 @@ function renderPeopleList(){
         <span class="m-meta"><span class="chip">${esc(c.group||'People')}</span><span class="note-acct">${c.received} in · ${c.sent} out</span>${state.account==='all'&&c.accounts.size?`<span class="note-acct">${[...c.accounts].map(acctShort).join(', ')}</span>`:''}</span>
       </span></div>`).join('');
   const bar=`<div class="people-sort"><span>Sort</span><div class="set-seg">${[['recent','Most recent'],['oldest','Oldest'],['az','A to Z']].map(([k,l])=>`<button class="${mode===k?'on':''}" data-psort="${k}">${l}</button>`).join('')}</div><span class="m-time">${list.length} people</span></div>`;
-  $('listScroll').innerHTML=bar+(html||'<div class="empty">No one yet'+(state.search?' matching your search':'')+'. Everyone you email or hear from shows up here automatically.</div>');
+  $('listScroll').innerHTML=bar+(html?html+(more>0?`<button class="set-btn bulk-more" id="peopleMore">Show ${Math.min(150,more)} more (${more.toLocaleString()} left)</button>`:''):'')+(html?'':'<div class="empty">No one yet'+(state.search?' matching your search':'')+'. Everyone you email or hear from shows up here automatically.</div>');
   $('listScroll').querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>openPerson(b.dataset.person));
-  $('listScroll').querySelectorAll('[data-psort]').forEach(b=>b.onclick=()=>{state.peopleSort=b.dataset.psort;renderList();});
+  $('listScroll').querySelectorAll('[data-psort]').forEach(b=>b.onclick=()=>{state.peopleSort=b.dataset.psort;state.peopleLimit=150;renderList();});
+  const pm=$('peopleMore');if(pm)pm.onclick=()=>{const st=$('listScroll').scrollTop;state.peopleLimit=(state.peopleLimit||150)+150;renderList();$('listScroll').scrollTop=st;};
 }
 function openPerson(email){
   state.personSel=email;state.selected=null;state.noteSel=null;
@@ -1817,7 +1916,7 @@ function renderSidebar(){
   html='';
   const groups={};
   vis.forEach((e)=>{
-    const g=groupOf(e);
+    const g=groupOf(e);if(g===NOGROUP)return;
     const idx=EMAILS.indexOf(e);
     groups[g]=groups[g]||{unread:0,recency:Infinity,senders:{}};
     groups[g].unread+=e.unread?1:0;
@@ -1895,7 +1994,7 @@ function renderSeg(){
 }
 function renderList(){
   const key=JSON.stringify([state.view,state.listFilter,state.account,state.search]);
-  const fresh=key!==lastListKey;lastListKey=key;if(fresh){state.listLimit=150;if(state.listFilter!=='bin'||!state.search)BINSEL.set.clear();}
+  const fresh=key!==lastListKey;lastListKey=key;if(fresh){state.listLimit=60;if(state.listFilter!=='bin'||!state.search)BINSEL.set.clear();}
   renderListInner();
   const ls=$('listScroll');
   if(fresh){
@@ -1926,15 +2025,17 @@ function renderListInner(){
       :f==='spam'?'No spam. Scams and unwanted senders go here, still kept in case something real slips in.'
       :f==='bin'?'Bin is empty. Things you bin stay here for good unless you empty it yourself.'
       :(Gmail.loadingLocal?'Opening your mail…':Gmail.on&&!Gmail.ready?'Loading your mail from Gmail…':'No emails here'+(state.search?' matching "'+esc(state.search)+'"':'')+'.');
+    if(Gmail.loadingLocal||(Gmail.on&&!Gmail.ready&&!EMAILS.length)){$('listScroll').innerHTML='<div class="skel-wrap" aria-label="Opening your mail">'+Array.from({length:7},(_,i)=>`<div class="skel-row" style="--d:${i*60}ms"><span class="skel-av"></span><span class="skel-lines"><span style="width:${28+(i*13)%30}%"></span><span style="width:${55+(i*17)%35}%"></span><span style="width:${70+(i*7)%25}%"></span></span></div>`).join('')+'</div>';return;}
     $('listScroll').innerHTML=`<div class="empty">${msg}</div>`;
     return;
   }
-  const LIMIT=state.listLimit||150;const shown=list.slice(0,LIMIT);
+  const LIMIT=state.listLimit||60;const shown=list.slice(0,LIMIT);
   const isBin=state.listFilter==='bin'&&state.view.type!=='reply';
   if(isBin)BINSEL.list=list;
   const binBar=isBin?binBarHtml(list):'';
   const actN=state.listFilter==='active'&&state.view.type==='inbox'&&!state.search?EMAILS.filter(m=>m.state==='active'&&!m.me&&(state.account==='all'||m.account===state.account)).length:0;
-  const bulkBanner=actN>=100?`<div class="bulk-banner"><span class="bb-ico">${ic('layers',18)}</span><span class="bb-txt"><b>${actN.toLocaleString()} emails waiting in Active</b><span>Bulk sort them by sender in a few clicks, instead of one by one.</span></span><button class="set-btn primary" id="bulkBannerGo">Bulk sort</button></div>`:'';
+  const unsortedS=(Gmail.on&&state.view.type==='inbox'&&!state.search&&state.listFilter==='active')?speedUnsortedCount():0;
+  const bulkBanner=(unsortedS>=20||actN>=100)?`<div class="bulk-banner"><span class="bb-ico">${ic('bolt',18)}</span><span class="bb-txt"><b>${unsortedS?unsortedS.toLocaleString()+' senders to sort':actN.toLocaleString()+' emails waiting in Active'}</b><span>Speed sort: one sender at a time, one key each. Covers every email from them, Active or Done.</span></span><button class="set-btn primary" id="speedBannerGo">Speed sort</button><button class="set-btn" id="bulkBannerGo">Table view</button></div>`:'';
   $('listScroll').innerHTML=bulkBanner+binBar+shown.map(e=>{
     const face=threadFace(e);const sn=senderOf(face);
     const g=groupOf(e);
@@ -1951,7 +2052,7 @@ function renderListInner(){
         <span class="m-subj">${esc(e.subject)}</span>
         <span class="m-snip">${esc(e.snippet)}</span>
         <span class="m-meta">
-          <span class="chip">${g}</span>
+          ${g===NOGROUP?'':`<span class="chip">${g}</span>`}
           ${e.flagged?'<span class="chip reply">reply</span>':''}
           ${state.gistsInline?`<span class="m-gistline">${ic('sparkle',9)} ${esc(e.gist)}</span>`:''}
         </span>
@@ -1969,7 +2070,7 @@ function renderListInner(){
       </span>
     </div>`;
   }).join('');
-  if(list.length>LIMIT){$('listScroll').insertAdjacentHTML('beforeend',`<button class="show-more" id="showMore">Show more · ${(list.length-LIMIT).toLocaleString()} older</button>`);$('showMore').onclick=()=>{state.listLimit=LIMIT+150;renderListInner();};}
+  if(list.length>LIMIT){$('listScroll').insertAdjacentHTML('beforeend',`<button class="show-more" id="showMore">Show more · ${(list.length-LIMIT).toLocaleString()} older</button>`);$('showMore').onclick=()=>{const ls=$('listScroll'),st=ls.scrollTop;state.listLimit=LIMIT+90;renderListInner();ls.scrollTop=st;};}
   wireSuggest($('listScroll'));
   if(isBin)wireBinSelect(list);
   $('listScroll').querySelectorAll('[data-open]').forEach(b=>b.onclick=ev=>{
@@ -2157,12 +2258,172 @@ function groupEditor(existing,onDone){
   setTimeout(()=>{if(!name.disabled)name.focus();},60);
 }
 
+
+/* ============ SPEED SORT: one sender at a time, one key each ============
+   Works on ALL your mail from that sender, whatever box it is in now, so it
+   doesn't matter whether Gmail had already archived it. */
+const SORTED_SENDERS=new Set();
+const SPEED={open:false,queue:[],idx:0,hist:[],group:null,t0:0,n0:0,totalE:0,sortedE:0,finish:false};
+const SPEED_ACTS=[['d','done','Done','tick'],['r','recent','Recent in Active','inbox'],['a','active','All in Active','inbox'],['j','junk','Junk','trash'],['s','spam','Spam','spam'],['b','bin','Bin','bin']];
+const SPEED_ACT_LABEL={done:'Done',recent:'Recent in Active',active:'All in Active',junk:'Junk',spam:'Spam',bin:'Bin'};
+function speedScope(e){return !e.me&&(state.account==='all'||e.account===state.account);}
+function speedGroups(){const pref=['People','Shopping','Finance','Work','Subscriptions','Social','Updates','Travel','Property','Uni','Driving'];return [...CUSTOM_GROUPS,...pref.filter(g=>BASE_GROUPS.includes(g)),...BASE_GROUPS.filter(g=>!pref.includes(g))];}
+function speedBuckets(){
+  const by=new Map();
+  EMAILS.forEach(e=>{
+    if(!speedScope(e))return;const k=senderKey(e);if(SORTED_SENDERS.has(k))return;
+    let r=by.get(k);if(!r){r={key:k,items:[],latest:0,first:Infinity,sample:e,counts:{active:0,done:0,junk:0,spam:0,bin:0},promo:0,bulk:0,names:new Set()};by.set(k,r);}
+    if(r.names.size<40)r.names.add(e.fromName||e.fromEmail);
+    r.items.push(e);r.counts[e.state]=(r.counts[e.state]||0)+1;
+    if((e.ts||0)>=r.latest){r.latest=e.ts||0;r.sample=e;}if(e.ts&&e.ts<r.first)r.first=e.ts;
+    const t=(e.subject||'')+' '+(e.snippet||'');if(PROMO.test(t))r.promo++;if(e.bulk||e.cat==='promotions')r.bulk++;
+  });
+  return [...by.values()].sort((a,b)=>b.items.length-a.items.length||b.latest-a.latest);
+}
+function speedSuggest(r){
+  if(r.sug)return r.sug;
+  const g=suggestGroup(r.sample);const n=r.items.length;const person=g==='People'||isPersonalDomain(r.sample.domain);
+  const ago=(Date.now()-r.latest)/864e5;
+  let act,why;
+  if(person||SPEED.replied.has(r.key)){act=ago<30?'recent':'done';why=(SPEED.replied.has(r.key)?'You have emailed them':'A person')+(ago<30?', recent mail stays in Active':', nothing recent');}
+  else if(r.promo/n>0.4||r.bulk/n>0.6||g==='Subscriptions'){act='junk';why='Mostly offers and newsletters';}
+  else if(g==='Social'){act='junk';why='Social notifications';}
+  else{act='done';why='Receipts, alerts and updates';}
+  return r.sug={group:g,act,why};
+}
+function speedUnsortedCount(){const ks=new Set();EMAILS.forEach(e=>{if(speedScope(e)){const k=senderKey(e);if(!SORTED_SENDERS.has(k))ks.add(k);}});return ks.size;}
+function openSpeed(){
+  if(BULK.open)closeBulk();
+  SPEED.replied=new Set(EMAILS.filter(m=>m.me).map(m=>senderKey(threadFace(m))));
+  SPEED.queue=speedBuckets();SPEED.idx=0;SPEED.hist=[];SPEED.group=null;SPEED.finish=false;SPEED.t0=Date.now();SPEED.n0=0;
+  const all=EMAILS.filter(speedScope);SPEED.totalE=all.length;SPEED.sortedE=all.filter(e=>SORTED_SENDERS.has(senderKey(e))).length;
+  SPEED.sortedS0=new Set(all.map(senderKey).filter(k=>SORTED_SENDERS.has(k))).size;
+  SPEED.open=true;renderSpeed();
+}
+function closeSpeed(){
+  SPEED.open=false;const w=$('speedWrap');if(w){w.classList.remove('show');setTimeout(()=>w.remove(),250);}
+  saveState();renderAll();
+}
+function speedCur(){return SPEED.queue[SPEED.idx]||null;}
+function speedCommit(act,group){
+  const r=speedCur();if(!r)return;
+  const sug=speedSuggest(r);group=group||SPEED.group||sug.group;act=act||sug.act;
+  const lists={};
+  if(act==='recent'){const cut=Date.now()-30*864e5;lists.active=r.items.filter(e=>(e.ts||0)>=cut);lists.done=r.items.filter(e=>!((e.ts||0)>=cut));}
+  else lists[act]=r.items;
+  const h={r,prevOverride:GROUP_OVERRIDES[r.key],prevRule:AUTO_RULES[r.key],prev:[],act,group};
+  if(group===NOGROUP)delete GROUP_OVERRIDES[r.key];else GROUP_OVERRIDES[r.key]=group;
+  if(act==='recent'||act==='active')delete AUTO_RULES[r.key];else AUTO_RULES[r.key]=act;
+  SORTED_SENDERS.add(r.key);
+  for(const st in lists){if(!lists[st].length)continue;const p=bulkSetState(lists[st],st,{silent:true,noRender:true});if(p)h.prev.push(...p);}
+  SPEED.hist.push(h);SPEED.sortedE+=r.items.length;SPEED.n0++;
+  SPEED.idx++;SPEED.group=null;
+  clearTimeout(SPEED.saveT);SPEED.saveT=setTimeout(()=>{invalidateThreads();saveState();updateBadge();},900);
+  renderSpeed(true);
+}
+function speedUndo(){
+  const h=SPEED.hist.pop();if(!h){toast('Nothing to undo','restore');return;}
+  if(h.batch){h.batch.forEach(k=>SORTED_SENDERS.delete(k));(h.groups||[]).forEach(([k,v])=>{if(v===undefined)delete GROUP_OVERRIDES[k];else GROUP_OVERRIDES[k]=v;});}
+  else{
+    if(h.prevOverride===undefined)delete GROUP_OVERRIDES[h.r.key];else GROUP_OVERRIDES[h.r.key]=h.prevOverride;
+    if(h.prevRule===undefined)delete AUTO_RULES[h.r.key];else AUTO_RULES[h.r.key]=h.prevRule;
+    SORTED_SENDERS.delete(h.r.key);
+  }
+  const by={};h.prev.forEach(p=>{p.m.state=p.state;p.m.unread=p.unread;p.m.read=p.read;(by[p.state]=by[p.state]||[]).push(p.m);});
+  if(Gmail.on){for(const st in by)Gmail.bulkState(by[st],st);Store.putMany(h.prev.map(p=>p.m).filter(m=>m.gid)).catch(()=>{});}
+  if(h.batch){SPEED.finish=false;SPEED.idx=h.idx;SPEED.sortedE-=h.emails;SPEED.n0-=h.batch.length;}
+  else{SPEED.idx=Math.max(0,SPEED.idx-1);SPEED.queue[SPEED.idx]=h.r;SPEED.sortedE-=h.r.items.length;SPEED.n0--;}
+  SPEED.group=h.group||null;invalidateThreads();
+  renderSpeed();toast('Undone','restore',h.batch?'Those senders are back in the queue.':(h.r.sample.fromName||'')+' is back on screen.');
+}
+function speedSkip(){const r=speedCur();if(!r)return;SPEED.queue.splice(SPEED.idx,1);SPEED.queue.push(r);SPEED.group=null;renderSpeed(true);}
+function speedFinish(mode){
+  const rest=SPEED.queue.slice(SPEED.idx);if(!rest.length)return;
+  const lists={active:[],done:[]};const cut=Date.now()-30*864e5;const groups=[];let emails=0;
+  rest.forEach(r=>{
+    const person=speedSuggest(r).group==='People'||isPersonalDomain(r.sample.domain)||SPEED.replied.has(r.key);
+    if(mode==='split'&&person){r.items.forEach(e=>((e.ts||0)>=cut?lists.active:lists.done).push(e));groups.push([r.key,GROUP_OVERRIDES[r.key]]);GROUP_OVERRIDES[r.key]='People';}
+    else lists.done.push(...r.items);
+    SORTED_SENDERS.add(r.key);emails+=r.items.length;
+  });
+  const prev=[];for(const st in lists){if(lists[st].length){const p=bulkSetState(lists[st],st,{silent:true,noRender:true});if(p)prev.push(...p);}}
+  SPEED.hist.push({batch:rest.map(r=>r.key),groups,prev,idx:SPEED.idx,emails});
+  SPEED.sortedE+=emails;SPEED.n0+=rest.length;SPEED.idx=SPEED.queue.length;SPEED.finish=false;
+  invalidateThreads();saveState();renderSpeed();
+  toast(rest.length.toLocaleString()+' senders sorted in one go','tick',emails.toLocaleString()+' emails. Press ← to undo.');
+}
+function renderSpeed(anim){
+  let w=$('speedWrap');const fresh=!w;
+  if(!w){w=document.createElement('div');w.id='speedWrap';w.className='bulk-wrap speed-wrap';document.body.appendChild(w);w.onclick=ev=>{if(ev.target===w)closeSpeed();};}
+  const r=speedCur();const totalS=SPEED.sortedS0+SPEED.queue.length;const doneS=SPEED.sortedS0+SPEED.idx;
+  const pct=SPEED.totalE?Math.round(SPEED.sortedE/SPEED.totalE*100):100;
+  const el=(Date.now()-SPEED.t0)/1000;const per=SPEED.n0>=5?el/SPEED.n0:2;const left=Math.max(0,SPEED.queue.length-SPEED.idx);
+  const mins=Math.ceil(left*per/60);
+  const head=`<div class="sp-head"><div><h2>Speed sort</h2><p>${doneS.toLocaleString()} of ${totalS.toLocaleString()} senders · ${SPEED.sortedE.toLocaleString()} of ${SPEED.totalE.toLocaleString()} emails sorted${left?` · about ${mins} min left at this pace`:''}</p></div><button class="set-btn" id="spClose">${ic('close',13)} Close</button></div>
+    <div class="sp-bar"><span style="width:${pct}%"></span></div>`;
+  let body;
+  if(SPEED.finish||!r){
+    const rest=SPEED.queue.slice(SPEED.idx);const restE=rest.reduce((n,x)=>n+x.items.length,0);
+    const people=rest.filter(x=>speedSuggest(x).group==='People'||isPersonalDomain(x.sample.domain)||SPEED.replied.has(x.key)).length;
+    body=rest.length?`<div class="sp-finish"><h3>Finish the rest in one go</h3><p>${rest.length.toLocaleString()} senders and ${restE.toLocaleString()} emails left. Most of them have only sent you one or two emails.</p>
+      <button class="sp-fin" data-fin="split"><b>People: recent in Active, older in Done. Everyone else: Done</b><span>${people.toLocaleString()} people get the People group. Nothing is deleted.</span></button>
+      <button class="sp-fin" data-fin="done"><b>Put them all in Done</b><span>Tucked away and searchable, never deleted.</span></button>
+      <button class="sp-fin" data-fin="back"><b>Keep going one by one</b><span>Back to the next sender.</span></button>
+      <p class="sp-hint">← undoes the last step, even this one.</p></div>`
+    :`<div class="sp-finish sp-done">${ic('tick',30)}<h3>Every sender is sorted</h3><p>New mail from them goes where you said. New senders show up here next time.</p><button class="set-btn primary" id="spDone">Back to my inbox</button></div>`;
+  }else{
+    const sg=speedSuggest(r);const g=SPEED.group||sg.group;
+    const recent=r.items.slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,5);
+    const multi=!isPersonalDomain(r.sample.domain)&&r.names.size>1;
+    const name=(!isPersonalDomain(r.sample.domain)&&SENDERS[r.sample.domain]&&SENDERS[r.sample.domain].name)||(multi?r.sample.domain:'')||r.sample.fromName||r.sample.fromEmail;
+    const span=r.first<Infinity?new Date(r.first).getFullYear():'';
+    const where=Object.entries(r.counts).filter(([,n])=>n).map(([k,n])=>n.toLocaleString()+' in '+DEST_LABEL[k]).join(', ');
+    const groups=speedGroups();
+    body=`<div class="sp-card ${anim?'in':''}">
+      <div class="sp-who"><span class="m-avatar sp-av" style="background:${avBg(r.sample.fromEmail,name)}">${initials(name||'?')}${isPersonalDomain(r.sample.domain)?'':logoTag(r.sample.fromEmail)}</span>
+        <div class="sp-name"><b>${esc(name)}</b><span>${esc(isPersonalDomain(r.sample.domain)?r.sample.fromEmail:multi?(r.names.size>=40?'40+':r.names.size)+' different senders at this address: '+[...r.names].slice(0,4).join(', ')+(r.names.size>4?'…':''):r.sample.domain)}</span></div>
+        <div class="sp-count"><b>${r.items.length.toLocaleString()}</b><span>email${r.items.length===1?'':'s'}${span?' since '+span:''}</span></div></div>
+      <div class="sp-where">Now: ${esc(where)}</div>
+      <div class="sp-recent">${recent.map(e=>`<div><span class="sp-subj">${esc(e.subject||'(no subject)')}</span><span class="sp-date">${esc(e.day&&e.day!=='Today'?e.day:e.time||'')}</span></div>`).join('')}</div>
+      <div class="sp-sug">${ic('magic',13)} Suggests <b>${esc(SPEED_ACT_LABEL[sg.act])}</b>${sg.group&&sg.group!==NOGROUP?` in <b>${esc(sg.group)}</b>`:''} · ${esc(sg.why)} <span class="kbd">Space</span></div>
+      <div class="sp-label">Group <span>(press a number, or 0 for none)</span></div>
+      <div class="sp-groups"><button class="sp-g ${g===NOGROUP?'on':''}" data-spg="${NOGROUP}"><span class="kbd">0</span>None</button>${groups.map((x,i)=>`<button class="sp-g ${x===g?'on':''}" data-spg="${esc(x)}">${i<9?`<span class="kbd">${i+1}</span>`:''}${ic(GROUP_ICON[x]||'folder',12)} ${esc(x)}</button>`).join('')}<button class="sp-g" data-spnew="1"><span class="kbd">N</span>${ic('plus',12)} New group</button></div>
+      <div class="sp-label">Where should all ${r.items.length===1?'of it':'of them'} go?</div>
+      <div class="sp-acts">${SPEED_ACTS.map(([k,a,l,icn])=>`<button class="sp-a ${a===sg.act?'sug':''} spa-${a}" data-spa="${a}"><span class="kbd">${k.toUpperCase()}</span>${ic(icn,14)} ${l}</button>`).join('')}</div>
+    </div>`;
+  }
+  w.innerHTML=`<div class="speed-card-wrap" role="dialog" aria-label="Speed sort">${head}${body}
+    <div class="sp-foot"><span><span class="kbd">←</span> Undo</span><span><span class="kbd">→</span> Skip</span><span><span class="kbd">F</span> Finish the rest</span><span><span class="kbd">Esc</span> Close</span><span class="sp-rules">Your choice also applies to new mail from that sender.</span></div></div>`;
+  if(fresh)requestAnimationFrame(()=>w.classList.add('show'));else w.classList.add('show');
+  w.querySelector('#spClose').onclick=closeSpeed;
+  const dn=w.querySelector('#spDone');if(dn)dn.onclick=closeSpeed;
+  w.querySelectorAll('[data-spg]').forEach(b=>b.onclick=()=>{SPEED.group=b.dataset.spg;renderSpeed();});
+  w.querySelectorAll('[data-spa]').forEach(b=>b.onclick=()=>speedCommit(b.dataset.spa));
+  const nb=w.querySelector('[data-spnew]');if(nb)nb.onclick=()=>groupEditor(null,g=>{SPEED.group=g;renderSpeed();});
+  w.querySelectorAll('[data-fin]').forEach(b=>b.onclick=()=>{const m=b.dataset.fin;if(m==='back'){SPEED.finish=false;renderSpeed();return;}speedFinish(m);});
+}
+document.addEventListener('keydown',ev=>{
+  if(!SPEED.open||document.querySelector('.ge-wrap'))return;
+  if(ev.metaKey||ev.ctrlKey||ev.altKey)return;
+  const k=ev.key;const hit=()=>{ev.preventDefault();ev.stopPropagation();};
+  if(k==='Escape'){hit();if(SPEED.finish){SPEED.finish=false;renderSpeed();}else closeSpeed();return;}
+  if(k==='ArrowLeft'||k==='Backspace'){hit();speedUndo();return;}
+  if(SPEED.finish||!speedCur()){if(k==='1'||k==='2'){hit();speedFinish(k==='1'?'split':'done');}return;}
+  if(k==='ArrowRight'){hit();speedSkip();return;}
+  if(k===' '||k==='Enter'){hit();speedCommit();return;}
+  if(k==='f'||k==='F'){hit();SPEED.finish=true;renderSpeed();return;}
+  if(k==='n'||k==='N'){hit();groupEditor(null,g=>{SPEED.group=g;renderSpeed();});return;}
+  if(/^[0-9]$/.test(k)){hit();if(k==='0'){SPEED.group=NOGROUP;}else{const g=speedGroups()[+k-1];if(g)SPEED.group=g;}renderSpeed();return;}
+  const a=SPEED_ACTS.find(x=>x[0]===k.toLowerCase());if(a){hit();speedCommit(a[1]);}
+},true);
+
 /* ============ BULK SORT: by sender, free, on this device ============ */
 function bulkSetState(list,s,opts){
   opts=opts||{};
   const seen=new Set();const msgs=[];
   list.forEach(e=>threadMsgs(e).forEach(m=>{if(!seen.has(m.id)){seen.add(m.id);msgs.push(m);}}));
-  if(!msgs.length)return null;
+  for(let i=msgs.length-1;i>=0;i--)if(msgs[i].state===s)msgs.splice(i,1);
+  if(!msgs.length)return [];
   const prev=msgs.map(m=>({m,state:m.state,unread:m.unread,read:m.read}));
   msgs.forEach(m=>{m.state=s;if(s!=='active'){m.unread=false;m.read=true;}});
   if(Gmail.on){Gmail.bulkState(msgs,s);Store.putMany(msgs.filter(m=>m.gid)).catch(()=>{});}
@@ -2195,7 +2456,7 @@ function bulkRows(){
   bulkPool().forEach(e=>{const k=senderKey(e);const r=by[k]=by[k]||{key:k,name:(!isPersonalDomain(e.domain)&&SENDERS[e.domain]&&SENDERS[e.domain].name)||e.fromName,email:e.fromEmail,domain:e.domain,items:[],promo:0,bulk:0,latest:0,sample:e};
     r.items.push(e);const t=(e.subject||'')+' '+(e.snippet||'');if(PROMO.test(t))r.promo++;if(e.bulk||e.cat==='promotions')r.bulk++;r.latest=Math.max(r.latest,e.ts||0);});
   return Object.values(by).map(r=>{
-    const g=groupOf(r.sample);const n=r.items.length;const person=g==='People';const talked=replied.has(r.key);
+    const g=suggestGroup(r.sample);const n=r.items.length;const person=g==='People';const talked=replied.has(r.key);
     const ago=r.latest?Math.floor((now-r.latest)/864e5):999;
     let act,why;
     if(person||talked){act=ago<14?'active':'done';why=(talked?'You have emailed them':'A person')+(ago<14?', heard from them recently':', nothing recent');}
@@ -2222,7 +2483,7 @@ function renderBulk(){
   const moving=rows.filter(r=>r.act!=='active');const movingN=moving.reduce((n,r)=>n+r.n,0);
   const groups=allGroups();
   w.innerHTML=`<div class="bulk-card" role="dialog" aria-label="Bulk sort">
-    <div class="bulk-head"><div><h2>Bulk sort</h2><p>${pool.length.toLocaleString()} emails in Active from ${total.toLocaleString()} senders. Free and on this device. Nothing is deleted: Done, Junk and Bin keep everything.</p></div><button class="set-btn" id="bulkClose">${ic('close',13)} Close</button></div>
+    <div class="bulk-head"><div><h2>Bulk sort</h2><p>${pool.length.toLocaleString()} emails in Active from ${total.toLocaleString()} senders. Free and on this device. Nothing is deleted: Done, Junk and Bin keep everything.</p></div><button class="set-btn primary" id="bulkSpeed">${ic('bolt',13)} Speed sort</button><button class="set-btn" id="bulkClose">${ic('close',13)} Close</button></div>
     <div class="bulk-quick">
       <span class="bq-ico">${ic('tick',16)}</span>
       <span class="bq-txt"><b>Quick clear</b><span>Everything in Active older than <select id="bulkAge">${[['7','1 week'],['30','1 month'],['90','3 months'],['365','1 year']].map(([v,l])=>`<option value="${v}" ${BULK.age===v?'selected':''}>${l}</option>`).join('')}</select> goes to Done. Needs Reply is left alone.</span></span>
@@ -2238,7 +2499,7 @@ function renderBulk(){
         <span class="m-avatar" style="background:${avBg(r.email,r.name)}">${initials(r.name||'?')}${r.group==='People'?'':logoTag(r.email)}</span>
         <span class="bk-main"><b>${esc(r.name||r.email)}</b><span class="bk-sub">${esc(r.group==='People'?r.email:r.domain)} · ${esc(r.why)} · suggests ${BULK_ACT[r.sugAct]}</span></span>
         <span class="bk-n">${r.n.toLocaleString()}</span>
-        <select data-bg="${esc(r.key)}" aria-label="Group">${groups.map(g=>`<option value="${esc(g)}" ${g===r.group?'selected':''}>${esc(g)}</option>`).join('')}<option value="__new">+ New group…</option></select>
+        <select data-bg="${esc(r.key)}" aria-label="Group"><option value="${NOGROUP}" ${r.group===NOGROUP?'selected':''}>No group</option>${groups.map(g=>`<option value="${esc(g)}" ${g===r.group?'selected':''}>${esc(g)}</option>`).join('')}<option value="__new">+ New group…</option></select>
         <select data-ba="${esc(r.key)}" aria-label="Move to">${Object.entries(BULK_ACT).map(([k,l])=>`<option value="${k}" ${k===r.act?'selected':''}>${l}</option>`).join('')}</select>
         <button class="set-btn" data-bapply="${esc(r.key)}">Apply</button>
       </div>`).join('')||`<div class="bin-hint" style="padding:30px;text-align:center">${pool.length?'No senders match.':'Active is empty. Nice.'}</div>`}
@@ -2249,7 +2510,7 @@ function renderBulk(){
   if(fresh)requestAnimationFrame(()=>w.classList.add('show'));else w.classList.add('show');
   const L=w.querySelector('.bulk-list');if(L&&keepScroll)L.scrollTop=keepScroll;
   const rowByKey=k=>rows.find(r=>r.key===k);
-  w.querySelector('#bulkClose').onclick=closeBulk;
+  w.querySelector('#bulkClose').onclick=closeBulk;w.querySelector('#bulkSpeed').onclick=openSpeed;
   w.querySelector('#bulkAge').onchange=ev=>{BULK.age=ev.target.value;renderBulk();};
   w.querySelector('#bulkOld').onclick=()=>{const list=bulkPool().filter(e=>e.ts&&e.ts<cut&&!e.flagged);if(!list.length)return;bulkSetState(list,'done',{note:'Everything older than '+w.querySelector('#bulkAge').selectedOptions[0].textContent+'. Undo puts them all back.'});renderBulk();};
   w.querySelectorAll('[data-bf]').forEach(b=>b.onclick=()=>{BULK.filter=b.dataset.bf;BULK.limit=60;renderBulk();});
@@ -2261,7 +2522,7 @@ function renderBulk(){
     const by={};let moved=0;
     list.forEach(r=>{const c=BULK.choice[r.key];if(c){if(c.act)r.act=c.act;if(c.group)r.group=c.group;}});
     list.forEach(r=>{
-      if(r.group!==r.autoGroup||GROUP_OVERRIDES[r.key])GROUP_OVERRIDES[r.key]=r.group;
+      if(r.group===NOGROUP)delete GROUP_OVERRIDES[r.key];else GROUP_OVERRIDES[r.key]=r.group;
       if(BULK.always&&r.act!=='active')AUTO_RULES[r.key]=r.act;else if(r.act==='active')delete AUTO_RULES[r.key];
       if(r.act!=='active'){(by[r.act]=by[r.act]||[]).push(...r.items);moved+=r.n;}
       delete BULK.choice[r.key];
@@ -2313,7 +2574,7 @@ function deleteForever(list){
   if(!confirm('Delete '+threads.length+' conversation'+(threads.length===1?'':'s')+' ('+msgs.length+' email'+(msgs.length===1?'':'s')+') forever?\n\nThey disappear from SmartMail now. '+(Gmail.on?'In Gmail they go to Trash, which Google empties after 30 days, so you have a month to change your mind there.':'')))return;
   if(Gmail.on){
     const byAcc={};msgs.forEach(m=>{if(m.gid&&m.thread&&m.thread.startsWith('g:')){(byAcc[m.account]=byAcc[m.account]||new Set()).add(m.thread.slice(2));}});
-    Object.entries(byAcc).forEach(([accId,set])=>{const acc=Gmail.accounts.find(a=>a.id===accId);if(!acc)return;[...set].forEach(tid=>Gmail.api(acc,'threads/'+tid+'/trash',{method:'POST'}).catch(err=>toast('Gmail did not accept a delete','bell',err.message)));});
+    Object.entries(byAcc).forEach(([accId,set])=>{const acc=Gmail.accounts.find(a=>a.id===accId);if(!acc)return;[...set].forEach(tid=>Gmail.api(acc,'threads/'+tid+'/trash',{method:'POST',prio:true}).catch(err=>toast('Gmail did not accept a delete','bell',err.message)));});
     Store.delKeys(msgs.filter(m=>m.gid).map(m=>m.account+':'+m.gid));
   }
   const ids=new Set(msgs.map(m=>m.id));
@@ -2643,7 +2904,7 @@ function renderTriage(){
     <div class="triage-box">
       <div class="triage-head"><h2>Sort Mail · ${deck.length} to go</h2><p>Pick where each one goes. It learns from every choice.</p></div>
       <div class="deck">${cardsHtml}</div>
-      <div class="triage-sugg">${(()=>{const sg=suggestPlacement(deck[0]);return `${ic('magic',12)} Suggests <b>${sg.dest==='active'?'Keep in '+esc(groupOf(deck[0])):DEST_LABEL[sg.dest]}</b> · ${Math.round(sg.conf*100)}%`;})()}</div>
+      <div class="triage-sugg">${(()=>{const sg=suggestPlacement(deck[0]);return `${ic('magic',12)} Suggests <b>${sg.dest==='active'?'Keep in '+esc(gLabel(groupOf(deck[0]))):DEST_LABEL[sg.dest]}</b> · ${Math.round(sg.conf*100)}%`;})()}</div>
       <div class="triage-actions">
         <button class="t-btn keep" id="actKeep" data-tip="Keep in Inbox|Sorted and stays in Active. Marks it read.">${ic('inbox',15)} Keep</button>
         <button class="t-btn" id="actReply" data-tip="Needs reply|Flags it and keeps it in Active so it waits for your answer.">${ic('flag',15)} Needs reply</button>
@@ -3346,9 +3607,21 @@ function bestVoice(){
   return chosen||vs.slice().sort((a,b)=>rankVoice(b)-rankVoice(a))[0];
 }
 let READING=null;
-function stopReading(){if(window.speechSynthesis)speechSynthesis.cancel();if(READING){READING.btn.classList.remove('on');READING.btn.innerHTML=READING.idle;READING=null;}}
+function stopReading(){if(window.speechSynthesis)speechSynthesis.cancel();if(READING){try{READING.btn.classList.remove('on');if(!READING.btn.classList.contains('read-bub'))READING.btn.innerHTML=READING.idle;}catch(e){}READING=null;}paintReadBar();}
+// Always-visible bar while anything is being read, wherever it started from
+function paintReadBar(){
+  let bar=$('readBar');
+  if(!READING){if(bar){bar.classList.remove('show');setTimeout(()=>{if(!READING&&bar.isConnected)bar.remove();},250);}return;}
+  if(!bar){bar=document.createElement('div');bar.id='readBar';bar.className='read-bar';document.body.appendChild(bar);requestAnimationFrame(()=>bar.classList.add('show'));}
+  else bar.classList.add('show');
+  const preview=READING.text.replace(/\s+/g,' ').slice(0,70)+(READING.text.length>70?'…':'');
+  bar.innerHTML=`<span class="rb-wave"><i></i><i></i><i></i><i></i></span><span class="rb-txt"><b>Reading aloud</b><span>${esc(preview)}</span></span><button class="rb-rate" id="rbRate" data-tip="Speed|Tap to change how fast it reads.">${readRate()}×</button><button class="rb-stop" id="rbStop" data-tip="Stop|Or press Esc.">${ic('stop',13)} Stop</button>`;
+  bar.querySelector('#rbStop').onclick=stopReading;
+  bar.querySelector('#rbRate').onclick=()=>{cycleRate();};
+}
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&READING){ev.stopPropagation();ev.preventDefault();stopReading();}},true);
 function readRate(){try{return parseFloat(localStorage.getItem('sm-rate'))||1;}catch(e){return 1;}}
-function setReadRate(r){try{localStorage.setItem('sm-rate',String(r));}catch(e){}document.querySelectorAll('.rate-btn').forEach(b=>b.textContent=r+'×');}
+function setReadRate(r){try{localStorage.setItem('sm-rate',String(r));}catch(e){}document.querySelectorAll('.rate-btn,#rbRate').forEach(b=>b.textContent=r+'×');}
 function cycleRate(){const seq=[1,1.15,1.3,1.5];const cur=readRate();const nx=seq[(seq.indexOf(cur)+1)%seq.length];setReadRate(nx);if(READING){const t=READING.text,b=READING.btn;stopReading();readAloud(t,b);}}
 function fillVoices(sel){
   const vs=voiceList().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>rankVoice(b)-rankVoice(a));
@@ -3387,7 +3660,7 @@ function readAloud(text,btn){
   stopReading();
   const t=(text||'').trim();if(!t){toast('Nothing to read yet','bell');return;}
   const idle=btn.innerHTML;btn.classList.add('on');if(!btn.classList.contains('read-bub'))btn.innerHTML=ic('stop',12)+' Stop';
-  READING={btn,idle,text:t};
+  READING={btn,idle,text:t};paintReadBar();
   const parts=t.replace(/\n+/g,'. ').replace(/\.\s*\./g,'.').split(/(?<=[.!?])\s+/).filter(x=>x.trim());
   const v=bestVoice();let i=0;
   const next=()=>{
@@ -3489,12 +3762,12 @@ const Gmail={
   // closes by itself. Chrome only allows that window after a click, unless
   // pop-ups are allowed for SmartMail, so: renew on a timer when we can, on
   // your next click when we can't, and pause downloads (nothing lost) until then.
-  async ensureToken(acc){
+  async ensureToken(acc,auto){
     if(acc.token&&Date.now()<acc.exp-30000)return true;
     if(acc._refreshing)return acc._refreshing;
     acc._refreshing=(async()=>{
-      try{const t=await this.token(acc.email,false);Object.assign(acc,t);acc.needsTap=false;this.save();this.paintAuth();setTimeout(()=>this.resumeAll(),50);return true;}
-      catch(e){acc.needsTap=true;this.paintAuth();return false;}
+      try{const t=await this.token(acc.email,false);Object.assign(acc,t);acc.needsTap=false;this.save();if(auto)this.setAuto(true);this.paintAuth();setTimeout(()=>this.resumeAll(),50);return true;}
+      catch(e){acc.needsTap=true;if(auto&&e.popup)this.setAuto(false);this.paintAuth();return false;}
       finally{acc._refreshing=null;}
     })();
     return acc._refreshing;
@@ -3506,8 +3779,10 @@ const Gmail={
   },
   keepAlive(){
     clearInterval(this._ka);
-    this._ka=setInterval(()=>{this.accounts.forEach(a=>{if(!a.needsTap&&Date.now()>a.exp-5*60000)this.ensureToken(a);});},60000);
+    this._ka=setInterval(()=>{this.accounts.forEach(a=>{if(!a.needsTap&&Date.now()>a.exp-5*60000)this.ensureToken(a,true);});},60000);
   },
+  autoState(){try{return localStorage.getItem('sm-autorenew');}catch(e){return null;}},
+  setAuto(ok){try{localStorage.setItem('sm-autorenew',ok?'yes':'no');}catch(e){}},
   resumeAll(){
     this.accounts.forEach(a=>{if(a.needsTap)return;const S=this.sync[a.id];if(!S||(!S.done&&!S.running))this.backfill(a);});
     this.refresh();
@@ -3517,7 +3792,7 @@ const Gmail={
     if(!need.length){if(el)el.remove();return;}
     if(!el){el=document.createElement('button');el.id='authPill';el.className='auth-pill';el.dataset.tip='Paused|Google asks SmartMail to confirm you are still signed in every hour. Click to carry on. To make this automatic, allow pop-ups for SmartMail (Settings → Connect Gmail explains how).';document.body.appendChild(el);
       el.onclick=()=>{const a=this.accounts.find(x=>x.needsTap);if(a){a.exp=0;this.ensureToken(a);}};}
-    el.innerHTML=`<span class="auth-dot"></span>Gmail paused · click to carry on`;
+    el.innerHTML=`<span class="auth-dot"></span>Click anywhere to reconnect Gmail`;
   },
   async addAccount(){
     if(!this.clientId){toast('Paste your Google Client ID first','bell','Settings → Connect Gmail');return;}
@@ -3567,7 +3842,7 @@ const Gmail={
   async api(acc,path,opts){
     opts=opts||{};
     for(let attempt=0;;attempt++){
-      await this.pace(acc,this.cost(path,opts));
+      if(!opts.prio)await this.pace(acc,this.cost(path,opts));
       try{const out=await this.api1(acc,path,opts);acc._ok=(acc._ok||0)+1;if(acc._ok%40===0)acc._rate=Math.min(240,(acc._rate||100)*1.12);return out;}
       catch(err){
         if(err.auth)throw err;
@@ -3585,7 +3860,7 @@ const Gmail={
   slowNote(acc,wait){const S=this.sync[acc.id];if(S){S.slow=Date.now()+wait;this.paintProgress();}},
   async api1(acc,path,opts){
     if(!(await this.ensureToken(acc))){const x=new Error('Waiting for you to confirm Google sign-in');x.auth=true;throw x;}
-    const go=async()=>fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,Object.assign({},opts,{headers:Object.assign({Authorization:'Bearer '+acc.token,'Content-Type':'application/json'},opts.headers||{})}));
+    const go=async()=>fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,Object.assign({},opts,{prio:undefined,headers:Object.assign({Authorization:'Bearer '+acc.token,'Content-Type':'application/json'},opts.headers||{})}));
     let r;try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}
     if(r.status===401){acc.exp=0;if(!(await this.ensureToken(acc))){const x=new Error('Waiting for you to confirm Google sign-in');x.auth=true;throw x;}try{r=await go();}catch(e){const x=new Error('Could not reach Gmail');x.network=true;throw x;}}
     if(!r.ok){let msg='Gmail error '+r.status;try{const j=await r.json();msg=(j.error&&j.error.message)||msg;}catch(e){}const x=new Error(msg);x.status=r.status;throw x;}
@@ -3655,52 +3930,59 @@ const Gmail={
     // Gmail's change log: every new email and every label change (from Apple Mail, your phone, anywhere) since last time
     const hidKey='hid:'+acc.id;let hid=await Store.getMeta(hidKey);
     if(!hid){const prof=await this.api(acc,'profile');await Store.setMeta(hidKey,prof.historyId);return null;}
-    let added=new Set(),changed=new Set(),page=null,latest=hid;
+    let added=new Set(),changed=new Set(),labels=new Map(),page=null,latest=hid;
     try{
       do{
-        const r=await this.api(acc,'history?startHistoryId='+hid+'&maxResults=500'+(page?'&pageToken='+page:''));
+        const r=await this.api(acc,'history?startHistoryId='+hid+'&maxResults=500'+(page?'&pageToken='+page:''),{prio:true});
         (r.history||[]).forEach(h=>{
           (h.messagesAdded||[]).forEach(x=>{if(!(x.message.labelIds||[]).includes('DRAFT')&&!(x.message.labelIds||[]).includes('CHAT'))added.add(x.message.id);});
-          (h.labelsAdded||[]).concat(h.labelsRemoved||[]).forEach(x=>changed.add(x.message.id));
+          (h.labelsAdded||[]).concat(h.labelsRemoved||[]).forEach(x=>{changed.add(x.message.id);if(x.message.labelIds)labels.set(x.message.id,x.message.labelIds);});
         });
         latest=r.historyId||latest;page=r.nextPageToken;
       }while(page);
     }catch(err){if(/404|not found|historyId/i.test(err.message)){await Store.setMeta(hidKey,null);return null;}throw err;}
     await Store.setMeta(hidKey,latest);
-    return {added:[...added],changed:[...changed]};
+    return {added:[...added],changed:[...changed],labels};
   },
   async fetchAccount(acc,initial){
+    this._dirty=false;
     const known=new Set(EMAILS.filter(e=>e.account===acc.id&&e.gid).map(e=>e.gid));
     let fresh,changedIds;
-    const ch=await this.changes(acc).catch(()=>null);
-    if(ch){fresh=ch.added.filter(id=>!known.has(id));changedIds=ch.changed.filter(id=>known.has(id));}
+    const ch=await this.changes(acc).catch(err=>{if(err.auth)throw err;return null;});
+    let direct=new Map();
+    if(ch){fresh=ch.added.filter(id=>!known.has(id));changedIds=ch.changed.filter(id=>known.has(id));direct=ch.labels;}
     else{
-      const r=await this.api(acc,'messages?maxResults=100&q='+encodeURIComponent('newer_than:3d -in:chats')+'&includeSpamTrash=true');
+      const r=await this.api(acc,'messages?maxResults=100&q='+encodeURIComponent('newer_than:3d -in:chats')+'&includeSpamTrash=true',{prio:true});
       const ids=(r.messages||[]).map(x=>x.id);
       fresh=ids.filter(id=>!known.has(id));changedIds=ids.filter(id=>known.has(id));
     }
-    const added=await this.pull(acc,fresh);
-    const mine=EMAILS.filter(e=>e.account===acc.id&&e.gid&&changedIds.includes(e.gid)).slice(0,300);
-    const metas=await Promise.all(mine.map(e=>this.api(acc,'messages/'+e.gid+'?format=minimal').catch(()=>null)));
-    metas.forEach((m,i)=>{if(!m)return;const e=mine[i];const ns=this.stateFromLabels(acc,m.labelIds||[]);const nf=(m.labelIds||[]).includes('STARRED');e.gtrash=(m.labelIds||[]).includes('TRASH')||(m.labelIds||[]).includes('SPAM');if(ns!==e.state||nf!==e.flagged){e.state=ns;e.flagged=nf;Store.mark(e);}});
+    const added=await this.pull(acc,fresh,true);
+    // label changes (from Apple Mail, your phone, or SmartMail itself): history already says what they are now, so no extra downloads
+    const chSet=new Set(changedIds);const byGid=new Map();EMAILS.forEach(e=>{if(e.account===acc.id&&e.gid&&chSet.has(e.gid))byGid.set(e.gid,e);});
+    const applyLabels=(e,L)=>{const ns=this.stateFromLabels(acc,L);const nf=L.includes('STARRED');e.gtrash=L.includes('TRASH')||L.includes('SPAM');if(ns!==e.state||nf!==e.flagged){e.state=ns;e.flagged=nf;Store.mark(e);this._dirty=true;}};
+    const need=[];byGid.forEach((e,gid)=>{const L=direct.get(gid);if(L)applyLabels(e,L);else if(!this.touchedRecently(gid))need.push(e);});
+    const mine=need.slice(0,150);
+    const metas=await Promise.all(mine.map(e=>this.api(acc,'messages/'+e.gid+'?format=minimal',{prio:true}).catch(()=>null)));
+    metas.forEach((m,i)=>{if(!m)return;const e=mine[i];const ns=this.stateFromLabels(acc,m.labelIds||[]);const nf=(m.labelIds||[]).includes('STARRED');e.gtrash=(m.labelIds||[]).includes('TRASH')||(m.labelIds||[]).includes('SPAM');if(ns!==e.state||nf!==e.flagged){e.state=ns;e.flagged=nf;Store.mark(e);this._dirty=true;}});
     EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));
     if(!initial)added.filter(e=>!e.me&&e.state==='active').forEach(e=>{
       const prior=EMAILS.filter(x=>x.thread===e.thread&&x!==e);const wasIn=prior.length&&prior[0].state!=='active'?prior[0].state:null;
       if(wasIn){prior.forEach(m=>{m.state='active';Store.mark(m);});this.modify(e,{addLabelIds:['INBOX']},true);}
       if(PREFS.notif&&PREFS.acctNotif[e.account]!==false){
         const title=wasIn?e.fromName+' replied':e.fromName;const sub=wasIn?'Conversation back in Active':(e.subject||'');
-        if(!sysNotify(e,title,sub+(PREFS.gistAlert&&e.gist?'\n'+e.gist:''))){toast(wasIn?e.fromName+' replied, conversation back in Active':'New email · '+e.fromName,wasIn?'reply':'bell','Auto-filed into '+groupOf(e)+' · '+acctShort(e.account),PREFS.gistAlert?e.gist:'',()=>{openEmail(e.id);});chime();}
+        if(!sysNotify(e,title,sub+(PREFS.gistAlert&&e.gist?'\n'+e.gist:''))){toast(wasIn?e.fromName+' replied, conversation back in Active':'New email · '+e.fromName,wasIn?'reply':'bell',(groupOf(e)===NOGROUP?'':'Filed into '+groupOf(e)+' · ')+acctShort(e.account),PREFS.gistAlert?e.gist:'',()=>{openEmail(e.id);});chime();}
       }
       if(Engine.kind!=='rules')Engine.gist(e).then(g=>{e.gist=g;Store.mark(e);renderList();});
     });
-    renderAll();
+    if(initial||added.length||this._dirty)renderAll();
+    this._dirty=false;
     this.backfill(acc);
     return added.length;
   },
-  async pull(acc,ids){
+  async pull(acc,ids,prio){
     const added=[];
     for(let i=0;i<ids.length;i+=10){
-      const batch=await Promise.all(ids.slice(i,i+10).map(id=>this.api(acc,'messages/'+id+'?format=full').catch(err=>{if(err.status===404)return null;throw err;})));
+      const batch=await Promise.all(ids.slice(i,i+10).map(id=>this.api(acc,'messages/'+id+'?format=full',prio?{prio:true}:undefined).catch(err=>{if(err.status===404)return null;throw err;})));
       const got=batch.filter(Boolean).map(m=>mk(this.toEmail(acc,m)));
       got.forEach(e=>{EMAILS.push(e);added.push(e);});
       Store.putMany(got).catch(()=>{});
@@ -3728,7 +4010,7 @@ const Gmail={
         S.token=r.nextPageToken||null;if(!S.token)S.done=true;
         await Store.setMeta('sync:'+acc.id,{v:2,done:S.done,total:S.total,fetched:S.fetched,token:S.token});
         pages++;
-        if(pages%3===0){EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));renderAll();}
+        if(pages%3===0){EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));renderLight();}
         this.paintProgress();
       }
       EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));renderAll();
@@ -3756,9 +4038,10 @@ const Gmail={
   accFor(e){return this.accounts.find(a=>a.id===e.account);},
   async modify(e,body,wholeThread){
     const acc=this.accFor(e);if(!acc||!e.gid)return;
+    this.touch((wholeThread?threadMsgs(e):[e]).filter(m=>m.gid).map(m=>m.gid));
     try{
-      if(wholeThread){await this.api(acc,'threads/'+e.thread.slice(2)+'/modify',{method:'POST',body:JSON.stringify(body)});}
-      else await this.api(acc,'messages/'+e.gid+'/modify',{method:'POST',body:JSON.stringify(body)});
+      if(wholeThread){await this.api(acc,'threads/'+e.thread.slice(2)+'/modify',{method:'POST',body:JSON.stringify(body),prio:true});}
+      else await this.api(acc,'messages/'+e.gid+'/modify',{method:'POST',body:JSON.stringify(body),prio:true});
     }catch(err){toast('Gmail did not accept that change','bell',err.message+'. SmartMail will show the old state until it does.');this.fetchAccount(acc,false);}
   },
   async setState(e,s){
@@ -3766,14 +4049,17 @@ const Gmail={
     const acc=this.accFor(e);if(!acc)return;const L=this.labelIds[acc.email]||{};
     const msgs=threadMsgs(e);
     if(msgs.some(m=>m.gtrash)){
-      try{await this.api(acc,'threads/'+e.thread.slice(2)+'/untrash',{method:'POST'});}catch(x){}
+      try{await this.api(acc,'threads/'+e.thread.slice(2)+'/untrash',{method:'POST',prio:true});}catch(x){}
       msgs.forEach(m=>{m.gtrash=false;});
     }
     const all=['INBOX','SPAM',L.Done,L.Junk,L.Spam,L.Bin].filter(Boolean);
     const add={active:['INBOX'],done:[L.Done],junk:[L.Junk],spam:[L.Spam],bin:[L.Bin]}[s]||[];
     this.modify(e,{addLabelIds:add.concat(s!=='active'?[L.Sorted]:[]).filter(Boolean),removeLabelIds:all.filter(x=>!add.includes(x))},true);
   },
+  touch(gids){const t=Date.now();this._touched=this._touched||new Map();gids.forEach(g=>this._touched.set(g,t));},
+  touchedRecently(g){const t=this._touched&&this._touched.get(g);return t&&Date.now()-t<15*60000;},
   async bulkState(msgs,s){
+    this.touch(msgs.filter(m=>m.gid).map(m=>m.gid));
     const by={};msgs.forEach(m=>{if(m.gid&&m.account)(by[m.account]=by[m.account]||[]).push(m);});
     for(const accId in by){
       const acc=this.accounts.find(a=>a.id===accId);if(!acc)continue;const L=this.labelIds[acc.email]||{};
@@ -3781,11 +4067,11 @@ const Gmail={
       const add=(({active:['INBOX'],done:[L.Done],junk:[L.Junk],spam:[L.Spam],bin:[L.Bin]})[s]||[]).filter(Boolean);
       const body={addLabelIds:add.concat(s!=='active'&&L.Sorted?[L.Sorted]:[]),removeLabelIds:all.filter(x=>!add.includes(x))};
       const tr=[...new Set(by[accId].filter(m=>m.gtrash).map(m=>m.thread))];
-      for(const t of tr){try{await this.api(acc,'threads/'+t.slice(2)+'/untrash',{method:'POST'});}catch(x){}}
+      for(const t of tr){try{await this.api(acc,'threads/'+t.slice(2)+'/untrash',{method:'POST',prio:true});}catch(x){}}
       by[accId].forEach(m=>{m.gtrash=false;});
       const ids=by[accId].map(m=>m.gid);
       for(let i=0;i<ids.length;i+=1000){
-        try{await this.api(acc,'messages/batchModify',{method:'POST',body:JSON.stringify(Object.assign({ids:ids.slice(i,i+1000)},body))});}
+        try{await this.api(acc,'messages/batchModify',{method:'POST',body:JSON.stringify(Object.assign({ids:ids.slice(i,i+1000)},body)),prio:true});}
         catch(err){toast('Gmail did not take a bulk change','bell',err.message+'. SmartMail will try again on the next sync.');}
       }
     }
@@ -3810,7 +4096,7 @@ const Gmail={
       raw=headers+'Content-Type: multipart/alternative; boundary="'+boundary+'"\r\n\r\n--'+boundary+'\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n'+btoa(unescape(encodeURIComponent(text)))+'\r\n--'+boundary+'\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n'+btoa(unescape(encodeURIComponent('<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5">'+d.html+htmlSig+'</div>')))+'\r\n--'+boundary+'--';
     }else raw=headers+'Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n'+btoa(unescape(encodeURIComponent(text)));
     const body={raw:b64(raw)};if(orig&&orig.thread&&orig.thread.startsWith('g:'))body.threadId=orig.thread.slice(2);
-    const r=await this.api(acc,'messages/send',{method:'POST',body:JSON.stringify(body)});
+    const r=await this.api(acc,'messages/send',{method:'POST',body:JSON.stringify(body),prio:true});
     return r;
   },
   async refresh(manual){
@@ -3845,7 +4131,10 @@ const Gmail={
     if(!this.on)return;
     clearInterval(this._st);this._st=setInterval(()=>this.paintStatus(),10000);this.paintStatus();
     clearInterval(this.pollTimer);this.pollTimer=setInterval(()=>this.refresh(),45000);
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden)this.refresh();});
+    if(!this._wired){this._wired=true;
+      const soon=()=>{if(!this.lastCheck||Date.now()-this.lastCheck>15000)this.refresh();};
+      document.addEventListener('visibilitychange',()=>{if(!document.hidden)soon();});
+      window.addEventListener('focus',soon);window.addEventListener('online',()=>this.refresh());}
   },
   async boot(){
     this.load();
@@ -3865,12 +4154,13 @@ const Gmail={
 
 /* ============ WIRING ============ */
 $('menuBtn').onclick=()=>$('sidebar').classList.toggle('open');
-$('searchInput').oninput=ev=>{state.search=ev.target.value;renderList();};
+$('searchInput').oninput=ev=>{state.search=ev.target.value;clearTimeout(window.__srchT);window.__srchT=setTimeout(renderList,120);};
+$('listScroll').addEventListener('scroll',()=>{const ls=$('listScroll');if(ls.scrollHeight-ls.scrollTop-ls.clientHeight<700){const b=$('showMore');if(b&&!window.__moreBusy){window.__moreBusy=true;requestAnimationFrame(()=>{b.click();window.__moreBusy=false;});}}},{passive:true});
 $('triageOpen').innerHTML=ic('sparkle',12)+' Sort Mail';$('triageOpen').dataset.tip='Sort Mail|Go through new emails one at a time: swipe right to keep, left for junk, up for needs reply.';
 $('triageOpen').onclick=openTriage;
 $('newGroupBtn').innerHTML=ic('plus',13);$('newGroupBtn').onclick=()=>groupEditor(null);
 $('bulkOpen').innerHTML=ic('layers',12)+' Bulk sort';$('bulkOpen').onclick=openBulk;
-document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();});
+document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();if(ev.target.closest&&ev.target.closest('#speedBannerGo'))openSpeed();});
 document.addEventListener('keydown',ev=>{if(BULK.open&&ev.key==='Escape'){ev.stopPropagation();ev.preventDefault();closeBulk();}},true);
 $('composeNew').innerHTML=ic('pencil',12)+' New';$('composeNew').dataset.tip='New|Write a new email, or describe it and let it be drafted for you.';
 $('composeNew').onclick=()=>{if(state.view.type==='notes'){const i=$('noteInput');if(i){i.focus();return;}}state.selected=null;$('reader').classList.remove('open');openCompose(null);};
@@ -3906,7 +4196,8 @@ $('gistToggle').onclick=()=>{state.gistsInline=!state.gistsInline;$('gistToggle'
 $('searchWrap').insertAdjacentHTML('afterbegin',ic('search',13));
 
 function syncUnread(){EMAILS.forEach(m=>{m.unread=m.state==='active'&&!m.me;m.read=!m.unread;});}
-var renderAll=function(){syncUnread();renderAccounts();renderSidebar();renderList();renderReader();if(state.settings)renderSettings();updateBadge();}
+function renderLight(){invalidateThreads();syncUnread();renderAccounts();renderSidebar();if(!state.settings&&['inbox','group','sender'].includes(state.view.type))renderSeg();updateBadge();}
+var renderAll=function(){invalidateThreads();syncUnread();renderAccounts();renderSidebar();renderList();renderReader();if(state.settings)renderSettings();updateBadge();}
 
 /* ============ LOGO -> SETTINGS MORPH ============ */
 let logoTimer=null;
@@ -4057,6 +4348,7 @@ function renderSettings(){
       <div class="set-row"><div class="sr-main"><div class="sr-sub">${Gmail.on?'Add account opens Google\'s own sign-in window. SmartMail never sees your password. Google asks SmartMail to re-confirm every hour with a tiny window that closes by itself. To let that happen in the background, allow pop-ups: in the SmartMail window click ⋮ (top right) → Site settings → Pop-ups and redirects → Allow. Otherwise it just waits for your next click.':'Gmail is not connected yet, so these are demo accounts with sample emails. Paste a Client ID above and Add account becomes real.'}</div></div><button class="set-btn" id="addAcctBtn">${ic('plus',12)} Add account</button></div>
     </div>
     <div class="set-card"><h3>Notifications</h3>
+      ${Gmail.on?row('Staying signed in',Gmail.autoState()==='yes'?'Automatic. Google’s hourly check happens in the background.':Gmail.autoState()==='no'?'Needs a click about once an hour, because Chrome is blocking Google’s tiny check-in window. Fix: in the SmartMail window click ⋮ → Site settings → Pop-ups and redirects → Allow.':'Not tested yet. It will know after the first hourly check.',`<span class="pill-mini ${Gmail.autoState()==='yes'?'ok':''}">${Gmail.autoState()==='yes'?'Automatic':Gmail.autoState()==='no'?'Needs a click':'—'}</span>`):''}
       ${row('Notifications','Show an alert when new mail arrives',sw('notif',PREFS.notif))}
       ${(()=>{const p='Notification' in window?Notification.permission:'unsupported';return row('Alerts on this Mac',p==='granted'?'Allowed. New mail pops up in the corner while SmartMail is open, even minimised or behind other windows.':p==='denied'?'Blocked. Open System Settings → Notifications → SmartMail (or Google Chrome) and allow, then reload.':p==='unsupported'?'This browser cannot show system alerts.':'Not allowed yet. Press Allow and choose Allow in the box that appears.',p==='default'?'<button class="set-btn primary" id="allowAlerts">Allow</button>':`<span class="pill-mini ${p==='granted'?'ok':''}">${p==='granted'?'On':p==='denied'?'Blocked':'—'}</span>`);})()}
       ${row('Sound','Play a soft chime',sw('sound',PREFS.sound))}
@@ -4065,6 +4357,7 @@ function renderSettings(){
       ${real.map(a=>row(`<span class="set-acct-dot" style="background:${a.color};display:inline-block;margin-right:8px"></span>${esc(a.label.split('@')[0])}`,'',sw('acct:'+a.id,PREFS.acctNotif[a.id]!==false))).join('')}
     </div>
     <div class="set-card"><h3>AI</h3>
+      ${row('Auto-group senders','Off: emails stay ungrouped until you choose a group in Speed sort or Bulk sort. On: SmartMail guesses a group for every sender.',sw('autoGroup',!!PREFS.autoGroup))}
       ${row('Show gists in the list','Display the short summary under every email',sw('gists',state.gistsInline))}
       ${row('On-device AI','<span id="engineStatus"></span>',`<span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="set-btn" id="chromeAiBtn" hidden>Turn on Chrome AI</button><button class="set-btn primary" id="engineBtn" hidden>${ic('sparkle',12)} Download free model (~1 GB)</button></span>`)}
       ${row('Costs','Nothing in SmartMail uses a paid service. AI runs on this device, voice uses the built-in voices, mail goes straight to Gmail.','<span class="chip">£0</span>')}
@@ -4111,7 +4404,7 @@ function renderSettings(){
     if(k==='gists'){state.gistsInline=on;$('gistToggle').classList.toggle('on',on);}
     else if(k.startsWith('sigauto:')){const id=k.slice(8);SIGS[id]=SIGS[id]||{};SIGS[id].auto=on;}
     else if(k.startsWith('acct:')){PREFS.acctNotif[k.slice(5)]=on;updateBadge();}
-    else{PREFS[k]=on;if(k==='notif'&&on)askAlerts();if(k==='badge'){if(on)askAlerts();updateBadge();}if(k==='sound'&&on)chime();}
+    else{PREFS[k]=on;if(k==='notif'&&on)askAlerts();if(k==='badge'){if(on)askAlerts();updateBadge();}if(k==='sound'&&on)chime();if(k==='autoGroup')renderAll();}
   });
   const aa=P.querySelector('#allowAlerts');if(aa)aa.onclick=()=>askAlerts();
   P.querySelector('#openSig').onclick=openSigEditor;
@@ -4246,7 +4539,7 @@ function saveSnapshot(){
     localStorage.setItem('sm-snap',JSON.stringify(pick.map(e=>{const o=Store.strip(e);o.body=[e.snippet||''];o.snap=1;return o;})));}catch(e){}
 }
 function saveState(){saveSnapshot();
-  try{localStorage.setItem(SAVE_KEY,JSON.stringify({ACCOUNTS,removedDemo:true,PREFS,SIGS,STYLE_RULES,NOTES,nextNote,DRAFTS,nextDraft,DECISIONS,GROUP_OVERRIDES,AUTO_RULES,CUSTOM_ICONS,CUSTOM_GROUPS,CONTACT_NOTES,CONTACT_PINS:[...CONTACT_PINS],openGroups:state.openGroups,sigAcct:state.sigAcct,peopleSort:state.peopleSort}));}catch(e){}
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({ACCOUNTS,removedDemo:true,PREFS,SIGS,STYLE_RULES,NOTES,nextNote,DRAFTS,nextDraft,DECISIONS,GROUP_OVERRIDES,AUTO_RULES,SORTED_SENDERS:[...SORTED_SENDERS],CUSTOM_ICONS,CUSTOM_GROUPS,CONTACT_NOTES,CONTACT_PINS:[...CONTACT_PINS],openGroups:state.openGroups,sigAcct:state.sigAcct,peopleSort:state.peopleSort}));}catch(e){}
 }
 function loadState(){
   try{
@@ -4257,7 +4550,7 @@ function loadState(){
     if(d.NOTES){NOTES=d.NOTES;nextNote=d.nextNote||NOTES.length+1;}
     if(d.DRAFTS){DRAFTS=d.DRAFTS;nextDraft=d.nextDraft||DRAFTS.length+1;}
     (d.DECISIONS||[]).forEach(x=>DECISIONS.push(x));
-    Object.assign(GROUP_OVERRIDES,d.GROUP_OVERRIDES||{});Object.assign(AUTO_RULES,d.AUTO_RULES||{});Object.entries(d.CUSTOM_ICONS||{}).forEach(([g,i])=>setGroupIcon(g,i));(d.CUSTOM_GROUPS||[]).forEach(g=>{if(!CUSTOM_GROUPS.includes(g))CUSTOM_GROUPS.push(g);});
+    Object.assign(GROUP_OVERRIDES,d.GROUP_OVERRIDES||{});Object.assign(AUTO_RULES,d.AUTO_RULES||{});(d.SORTED_SENDERS||[]).forEach(k=>SORTED_SENDERS.add(k));Object.entries(d.CUSTOM_ICONS||{}).forEach(([g,i])=>setGroupIcon(g,i));(d.CUSTOM_GROUPS||[]).forEach(g=>{if(!CUSTOM_GROUPS.includes(g))CUSTOM_GROUPS.push(g);});
     Object.assign(CONTACT_NOTES,d.CONTACT_NOTES||{});(d.CONTACT_PINS||[]).forEach(x=>CONTACT_PINS.add(x));
     if(d.openGroups)state.openGroups=d.openGroups;if(d.sigAcct)state.sigAcct=d.sigAcct;if(d.peopleSort)state.peopleSort=d.peopleSort;
     if(PREFS.theme&&PREFS.theme!=='auto')document.documentElement.setAttribute('data-theme',PREFS.theme);
