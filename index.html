@@ -2071,7 +2071,9 @@ function renderListInner(){
   const actN=state.listFilter==='active'&&state.view.type==='inbox'&&!state.search?EMAILS.filter(m=>m.state==='active'&&!m.me&&(state.account==='all'||m.account===state.account)).length:0;
   const unsortedS=(Gmail.on&&state.view.type==='inbox'&&!state.search&&state.listFilter==='active')?speedUnsortedCount():0;
   const bulkBanner=(unsortedS>=20||actN>=100)?`<div class="bulk-banner"><span class="bb-ico">${ic('bolt',18)}</span><span class="bb-txt"><b>${unsortedS?unsortedS.toLocaleString()+' senders to sort':actN.toLocaleString()+' emails waiting in Active'}</b><span>Speed sort: one sender at a time, one key each. Covers every email from them, Active or Done.</span></span><button class="set-btn primary" id="speedBannerGo">Speed sort</button><button class="set-btn" id="bulkBannerGo">Table view</button></div>`:'';
-  $('listScroll').innerHTML=bulkBanner+binBar+shown.map(e=>{
+  const doneN=state.listFilter==='done'&&!state.search?list.length:0;
+  const doneBanner=doneN?`<div class="bulk-banner"><span class="bb-ico" style="background:#34c759">${ic('tick',18)}</span><span class="bb-txt"><b>${doneN.toLocaleString()} in Done</b><span>Not sure these are really done? Move them all to Active and Speed sort them. Only SmartMail changes.</span></span><button class="set-btn primary" id="doneToActive">Move all to Active</button></div>`:'';
+  $('listScroll').innerHTML=doneBanner+bulkBanner+binBar+shown.map(e=>{
     const face=threadFace(e);const sn=senderOf(face);
     const g=groupOf(e);
     const inactive=e.state!=='active';
@@ -2381,6 +2383,12 @@ window.addEventListener('resize',()=>document.querySelectorAll('.mail-frame').fo
 
 /* ============ RESET: everything back into Active, sorting starts from scratch ============ */
 async function resetSorting(why){
+  for(let i=0;i<60&&Gmail.busy;i++)await new Promise(r=>setTimeout(r,500)); // let any catch-up finish first
+  Gmail.holdSync=true;
+  try{await resetSorting0(why);}finally{Gmail.holdSync=false;}
+  if(Gmail.on){try{for(const acc of Gmail.accounts){if(!acc.needsTap)await Gmail.resyncStates(acc);}}catch(e){}invalidateThreads();renderAll();}
+}
+async function resetSorting0(why){
   const moved=[];
   EMAILS.forEach(e=>{if(e.me||e.gtrash)return;if(e.state!=='active'){moved.push({m:e,state:e.state});e.state='active';e.triaged=false;}});
   // forget earlier sorting so Speed sort starts at sender one, and nothing gets auto-moved
@@ -2393,6 +2401,16 @@ async function resetSorting(why){
   Gmail.accounts.forEach(a=>{try{localStorage.setItem('sm-mig-arch-'+a.id,'1');}catch(e){}});
   invalidateThreads();saveState();renderAll();
   toast(moved.length.toLocaleString()+' emails moved back into Active','inbox',(why==='auto'?'Fresh start, as asked. ':'')+'Speed sort is ready from the first sender. Gmail and Apple Mail inboxes are unchanged.','',null,null,12000);
+}
+
+
+async function moveToActiveQuiet(list,label){
+  const moved=[];list.forEach(e=>threadMsgs(e).forEach(m=>{if(!m.me&&m.state!=='active'&&!m.gtrash){moved.push({m,state:m.state});m.state='active';m.triaged=false;}}));
+  if(!moved.length)return;
+  moved.forEach(x=>{const k=senderKey(x.m);SORTED_SENDERS.delete(k);});
+  if(Gmail.on){Store.putMany(moved.map(x=>x.m).filter(m=>m.gid)).catch(()=>{});Gmail.clearSmartLabels(moved.map(x=>x.m));}
+  invalidateThreads();saveState();renderAll();
+  toast(moved.length.toLocaleString()+' emails moved to Active','inbox',label||'Ready for Speed sort. Gmail and Apple Mail inboxes are unchanged.','',null,{label:'Undo',fn:()=>{const by={};moved.forEach(x=>{x.m.state=x.state;(by[x.state]=by[x.state]||[]).push(x.m);});if(Gmail.on){for(const st in by)Gmail.bulkState(by[st],st);Store.putMany(moved.map(x=>x.m).filter(m=>m.gid)).catch(()=>{});}renderAll();toast('Put back','restore');}},10000);
 }
 
 /* ============ SPEED SORT: one sender at a time, one key each ============
@@ -4232,7 +4250,7 @@ const Gmail={
     // label changes (from Apple Mail, your phone, or SmartMail itself): history already says what they are now, so no extra downloads
     const chSet=new Set(changedIds);const byGid=new Map();EMAILS.forEach(e=>{if(e.account===acc.id&&e.gid&&chSet.has(e.gid))byGid.set(e.gid,e);});
     const applyLabels=(e,L)=>{const ns=this.stateFromLabels(acc,L);const nf=L.includes('STARRED');e.gtrash=L.includes('TRASH')||L.includes('SPAM');if(ns!==e.state||nf!==e.flagged){e.state=ns;e.flagged=nf;Store.mark(e);this._dirty=true;}};
-    const need=[];byGid.forEach((e,gid)=>{const L=direct.get(gid);if(L)applyLabels(e,L);else if(!this.touchedRecently(gid))need.push(e);});
+    const need=[];byGid.forEach((e,gid)=>{if(this.touchedRecently(gid))return;const L=direct.get(gid);if(L)applyLabels(e,L);else need.push(e);});
     const mine=need.slice(0,150);
     const metas=await Promise.all(mine.map(e=>this.api(acc,'messages/'+e.gid+'?format=minimal',{prio:true}).catch(()=>null)));
     metas.forEach((m,i)=>{if(!m)return;const e=mine[i];const ns=this.stateFromLabels(acc,m.labelIds||[]);const nf=(m.labelIds||[]).includes('STARRED');e.gtrash=(m.labelIds||[]).includes('TRASH')||(m.labelIds||[]).includes('SPAM');if(ns!==e.state||nf!==e.flagged){e.state=ns;e.flagged=nf;Store.mark(e);this._dirty=true;}});
@@ -4427,7 +4445,7 @@ const Gmail={
     return r.json();
   },
   async refresh(manual){
-    if(!this.on)return;
+    if(!this.on||this.holdSync)return;
     if(this.busy){if(manual)this._again=true;return;}
     this.busy=true;this.paintStatus();
     let ok=0;
@@ -4489,7 +4507,7 @@ $('triageOpen').innerHTML=ic('sparkle',12)+' Sort Mail';$('triageOpen').dataset.
 $('triageOpen').onclick=openTriage;
 $('newGroupBtn').innerHTML=ic('plus',13);$('newGroupBtn').onclick=()=>groupEditor(null);
 $('bulkOpen').innerHTML=ic('layers',12)+' Bulk sort';$('bulkOpen').onclick=openBulk;
-document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();if(ev.target.closest&&ev.target.closest('#speedBannerGo'))openSpeed();});
+document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#doneToActive')){const l=scopeList().filter(e=>e.state==='done');if(confirm('Move all '+l.length.toLocaleString()+' Done emails back to Active?\n\nOnly SmartMail changes: your Gmail and Apple Mail inboxes stay as they are. Undo is available.'))moveToActiveQuiet(l);}if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();if(ev.target.closest&&ev.target.closest('#speedBannerGo'))openSpeed();});
 document.addEventListener('keydown',ev=>{if(BULK.open&&ev.key==='Escape'){ev.stopPropagation();ev.preventDefault();closeBulk();}},true);
 $('composeNew').innerHTML=ic('pencil',12)+' New';$('composeNew').dataset.tip='New|Write a new email, or describe it and let it be drafted for you.';
 $('composeNew').onclick=()=>{if(state.view.type==='notes'){const i=$('noteInput');if(i){i.focus();return;}}state.selected=null;$('reader').classList.remove('open');openCompose(null);};
