@@ -2031,7 +2031,8 @@ function renderSeg(){
   const base=scopeList();
   let counts={active:0,done:0,junk:0,spam:0,bin:0};
   const scS=savedCounts();
-  if(scS&&scS.seg&&v.type==='inbox'&&!state.search)counts=Object.assign(counts,scS.seg[state.account]||{});
+  if(Gmail.on&&Gmail.loadingLocal){ // full mail still opening: real saved numbers, or none at all (never the preview's)
+    if(scS&&scS.seg&&v.type==='inbox'&&!state.search)counts=Object.assign(counts,scS.seg[state.account]||{});}
   else base.forEach(e=>{if(counts[e.state]!==undefined)counts[e.state]++;});
   $('segItems').innerHTML=[['active','Active'],['done','Done'],['junk','Junk'],['spam','Spam'],['bin','Bin']].map(([k,lab])=>
     `<button class="${state.listFilter===k?'on':''}" data-seg="${k}" role="tab" aria-selected="${state.listFilter===k}" data-tip="${TIPS[k]}">${lab}${counts[k]?`<span class="seg-n">${counts[k]}</span>`:''}</button>`).join('');
@@ -2777,6 +2778,7 @@ function chime(){
 }
 function updateBadge(){
   try{
+    if(Gmail.on&&Gmail.loadingLocal&&!SNAPC)return; // keep the Dock badge as it was until real numbers are ready
     const sc=savedCounts();const n=sc?sc.badge:EMAILS.filter(e=>e.state==='active'&&e.unread&&!e.me&&PREFS.acctNotif[e.account]!==false).length;
     if('setAppBadge' in navigator){if(PREFS.badge&&n)navigator.setAppBadge(n).catch(()=>{});else navigator.clearAppBadge().catch(()=>{});}
     document.title=(PREFS.badge&&n?'('+n.toLocaleString()+') ':'')+'SmartMail';
@@ -5057,7 +5059,7 @@ function liveCounts(){
   return c;
 }
 let SNAPC=null;try{SNAPC=JSON.parse(localStorage.getItem('sm-snapc')||'null');}catch(e){}
-function savedCounts(){return Gmail.on&&Gmail.loadingLocal&&SNAPC?SNAPC:null;}
+function savedCounts(){return Gmail.on&&Gmail.loadingLocal?(SNAPC||{acct:{},inbox:{},badge:0}):null;}
 function saveSnapshot(){
   if(!Gmail.on||Gmail.loadingLocal)return;
   try{SNAPC=liveCounts();localStorage.setItem('sm-snapc',JSON.stringify(SNAPC));}catch(e){}
