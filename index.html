@@ -1122,6 +1122,14 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 .acct-info{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px;color:var(--muted)}.acct-info b{color:var(--ink2)}
 .acct-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.acct-links .set-btn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:12px}
 .acct-row{align-items:flex-start}
+.stay-card{width:min(560px,94vw)}
+.stay-step{display:flex;align-items:center;gap:12px;margin:10px 0}
+.stay-step>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px}.stay-step>div span{color:var(--muted);font-size:12px}
+.st-n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex:none}
+.stay-step .set-btn{text-decoration:none;flex:none}
+.stay-list{display:flex;flex-direction:column;gap:6px;margin:4px 0 6px 36px}
+.stay-acct{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:var(--subtle)}
+.sa-mail{flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 
 <div class="app" id="app">
@@ -2072,8 +2080,8 @@ function renderListInner(){
   const actN=state.listFilter==='active'&&state.view.type==='inbox'&&!state.search?EMAILS.filter(m=>m.state==='active'&&!m.me&&(state.account==='all'||m.account===state.account)).length:0;
   const unsortedS=(Gmail.on&&state.view.type==='inbox'&&!state.search&&state.listFilter==='active')?speedUnsortedCount():0;
   const bulkBanner=(unsortedS>=20||actN>=100)?`<div class="bulk-banner"><span class="bb-ico">${ic('bolt',18)}</span><span class="bb-txt"><b>${unsortedS?unsortedS.toLocaleString()+' senders to sort':actN.toLocaleString()+' emails waiting in Active'}</b><span>Speed sort: one sender at a time, one key each. Covers every email from them, Active or Done.</span></span><button class="set-btn primary" id="speedBannerGo">Speed sort</button><button class="set-btn" id="bulkBannerGo">Table view</button></div>`:'';
-  const doneN=state.listFilter==='done'&&!state.search?scopeList().filter(x=>x.state==='done').length:0;
-  const doneBanner=doneN?`<div class="bulk-banner"><span class="bb-ico" style="background:#34c759">${ic('tick',18)}</span><span class="bb-txt"><b>${doneN.toLocaleString()} in Done</b><span>Not sure these are really done? Move them all to Active and Speed sort them. Only SmartMail changes.</span></span><button class="set-btn primary" id="doneToActive">Move all to Active</button></div>`:'';
+  const mvF=['done','spam','bin','junk'].includes(state.listFilter)&&!state.search?state.listFilter:null;const doneN=mvF?scopeList().filter(x=>x.state===mvF).length:0;
+  const doneBanner=doneN?`<div class="bulk-banner"><span class="bb-ico" style="background:${mvF==='done'?'#34c759':'#ff9500'}">${ic(mvF==='done'?'tick':mvF==='bin'?'bin':mvF==='spam'?'spam':'trash',18)}</span><span class="bb-txt"><b>${doneN.toLocaleString()} in ${DEST_LABEL[mvF]}</b><span>${mvF==='spam'?'Includes mail Gmail itself flagged as spam, so some may be scams. ':''}Move them all to Active and Speed sort them. Your Apple Mail inbox is not changed.</span></span><button class="set-btn primary" id="doneToActive">Move all to Active</button></div>`:'';
   $('listScroll').innerHTML=doneBanner+bulkBanner+binBar+shown.map(e=>{
     const face=threadFace(e);const sn=senderOf(face);
     const g=groupOf(e);
@@ -2382,6 +2390,32 @@ function mountHtmlBodies(root){
 try{state.plainText=localStorage.getItem('sm-plain')==='1';}catch(e){}
 window.addEventListener('resize',()=>document.querySelectorAll('.mail-frame').forEach(fitFrame));
 
+
+/* ============ STAY SIGNED IN: guided, one click per account ============ */
+function openStaySignedIn(){
+  let w=$('stayWrap');if(!w){w=document.createElement('div');w.id='stayWrap';w.className='bulk-wrap ge-wrap';document.body.appendChild(w);w.onclick=ev=>{if(ev.target===w)closeStay();};requestAnimationFrame(()=>w.classList.add('show'));}
+  const hasSecret=!!Gmail.clientSecret;
+  const rows=Gmail.accounts.map(a=>`<div class="stay-acct"><span class="set-acct-dot" style="background:${a.color}"></span><span class="sa-mail">${esc(a.email)}</span>${a.rtk?'<span class="pill-mini ok">Stays signed in</span>':`<button class="set-btn ${hasSecret?'primary':''}" data-stay="${a.id}" ${hasSecret?'':'disabled'}>Connect</button><button class="set-btn" data-once="${a.id}" data-tip="Just this time|Reconnects now with Google’s window. You will be asked again in about an hour.">Just this hour</button>`}</div>`).join('');
+  const allOn=Gmail.accounts.length&&Gmail.accounts.every(a=>a.rtk);
+  w.innerHTML=`<div class="ge-card stay-card" role="dialog" aria-label="Stay signed in">
+    <h2>${allOn?'All set':'Stop the reconnect bar for good'}</h2>
+    <p class="ge-sub">${allOn?'Every account now renews in the background. No more Google windows or reconnect bar.':'Google only hands SmartMail a one-hour pass. With a <b>client secret</b>, SmartMail can renew it quietly in the background instead, so you never see Google’s window or this bar again. About 2 minutes, once.'}</p>
+    ${allOn?'':`<div class="stay-step"><span class="st-n">1</span><div><b>Get your client secret</b><span>Opens Google Cloud. Click <b>SmartMail</b>, then <b>+ Add secret</b>, then the copy icon next to it (starts GOCSPX-).</span></div><a class="set-btn" href="https://console.cloud.google.com/auth/clients" target="_blank" rel="noopener">Open Google Cloud</a></div>
+    <div class="stay-step"><span class="st-n">2</span><div><b>Paste it here</b><span>Kept only on this Mac.</span></div></div>
+    <div class="add-acct open" style="margin:0 0 6px"><input id="staySecret" type="password" placeholder="GOCSPX-…" value="${esc(Gmail.clientSecret)}"><button class="set-btn primary" id="staySave">Save</button></div>
+    <div class="stay-step"><span class="st-n">3</span><div><b>Connect each account</b><span>One Google window per account: choose that account and press Continue.</span></div></div>`}
+    <div class="stay-list">${rows}</div>
+    ${allOn?'':`<div class="stay-step"><span class="st-n">4</span><div><b>Publish the app (stops a weekly sign-out)</b><span>Google Cloud → Audience → <b>Publish app</b> → Confirm. It stays private to you.</span></div><a class="set-btn" href="https://console.cloud.google.com/auth/audience" target="_blank" rel="noopener">Open Audience</a></div>`}
+    <div class="ge-foot"><span style="flex:1"></span><button class="set-btn ${allOn?'primary':''}" id="stayClose">${allOn?'Done':'Close'}</button></div>
+  </div>`;
+  w.querySelector('#stayClose').onclick=closeStay;
+  const sv=w.querySelector('#staySave');if(sv)sv.onclick=()=>{const v=w.querySelector('#staySecret').value.trim();if(!/^GOCSPX-/.test(v)&&v){toast('That does not look like a client secret','bell','It starts with GOCSPX-');return;}Gmail.clientSecret=v;Gmail.save();toast('Secret saved','tick','Now press Connect for each account.');openStaySignedIn();};
+  w.querySelectorAll('[data-stay]').forEach(b=>b.onclick=async()=>{const a=Gmail.accounts.find(x=>x.id===b.dataset.stay);b.disabled=true;b.textContent='Waiting for Google…';
+    try{await Gmail.enableSilent(a);toast(a.email+' stays signed in now','tick');}catch(e){toast('Could not connect '+a.email,'bell',e.message+(e.network?' (your browser blocked Google’s sign-in server).':''));}openStaySignedIn();});
+  w.querySelectorAll('[data-once]').forEach(b=>b.onclick=async()=>{const a=Gmail.accounts.find(x=>x.id===b.dataset.once);a.exp=0;b.disabled=true;await Gmail.ensureToken(a,false,a.needsInteractive);openStaySignedIn();});
+}
+function closeStay(){const w=$('stayWrap');if(w){w.classList.remove('show');setTimeout(()=>w.remove(),250);}}
+
 /* ============ RESET: everything back into Active, sorting starts from scratch ============ */
 async function resetSorting(why){
   for(let i=0;i<60&&Gmail.busy;i++)await new Promise(r=>setTimeout(r,500)); // let any catch-up finish first
@@ -2398,19 +2432,20 @@ async function resetSorting0(why){
     Store.putMany(moved.map(x=>x.m).filter(m=>m.gid)).catch(()=>{});
     await Gmail.clearSmartLabels(moved.map(x=>x.m));
   }
-  try{localStorage.setItem('sm-reset-1','1');}catch(e){}
+  try{localStorage.setItem('sm-reset-1','1');localStorage.setItem('sm-reset-2','1');}catch(e){}
   Gmail.accounts.forEach(a=>{try{localStorage.setItem('sm-mig-arch-'+a.id,'1');}catch(e){}});
   invalidateThreads();saveState();renderAll();
   toast(moved.length.toLocaleString()+' emails moved back into Active','inbox',(why==='auto'?'Fresh start, as asked. ':'')+'Speed sort is ready from the first sender. Gmail and Apple Mail inboxes are unchanged.','',null,null,12000);
 }
 
 
-async function moveToActiveQuiet(list,label){
-  const moved=[];list.forEach(e=>threadMsgs(e).forEach(m=>{if(!m.me&&m.state!=='active'&&!m.gtrash){moved.push({m,state:m.state});m.state='active';m.triaged=false;}}));
-  if(!moved.length)return;
+async function moveToActiveQuiet(list,label,silent){
+  const moved=[];list.forEach(e=>threadMsgs(e).forEach(m=>{if(!m.me&&m.state!=='active'){moved.push({m,state:m.state,gtrash:m.gtrash});m.state='active';m.triaged=false;}}));
+  if(!moved.length)return 0;
   moved.forEach(x=>{const k=senderKey(x.m);SORTED_SENDERS.delete(k);});
-  if(Gmail.on){Store.putMany(moved.map(x=>x.m).filter(m=>m.gid)).catch(()=>{});Gmail.clearSmartLabels(moved.map(x=>x.m));}
+  if(Gmail.on){const g=moved.filter(x=>x.gtrash).map(x=>x.m);Gmail.clearSmartLabels(moved.map(x=>x.m));if(g.length)await Gmail.unspamUntrash(g);moved.forEach(x=>{x.m.gtrash=false;});Store.putMany(moved.map(x=>x.m).filter(m=>m.gid)).catch(()=>{});}
   invalidateThreads();saveState();renderAll();
+  if(silent)return moved.length;
   toast(moved.length.toLocaleString()+' emails moved to Active','inbox',label||'Ready for Speed sort. Gmail and Apple Mail inboxes are unchanged.','',null,{label:'Undo',fn:()=>{const by={};moved.forEach(x=>{x.m.state=x.state;(by[x.state]=by[x.state]||[]).push(x.m);});if(Gmail.on){for(const st in by)Gmail.bulkState(by[st],st);Store.putMany(moved.map(x=>x.m).filter(m=>m.gid)).catch(()=>{});}renderAll();toast('Put back','restore');}},10000);
 }
 
@@ -3953,12 +3988,12 @@ const Store={
    Talks to Gmail directly from this device using Google's own sign-in. Nothing goes through any
    other server. Needs a Google "Client ID" (Settings → Connect Gmail) which you create once. */
 const Gmail={
-  clientId:'',accounts:[],   // {email,token,exp,color,id}
+  clientId:'',clientSecret:'',accounts:[],   // {email,token,exp,color,id,rtk}
   labelIds:{},               // per account email -> {Done, Junk, Sorted}
   pollTimer:null,ready:false,
   get on(){return this.accounts.length>0;},
-  load(){try{const d=JSON.parse(localStorage.getItem('sm-gmail')||'null');if(d){this.clientId=d.clientId||'';this.accounts=d.accounts||[];this.labelIds=d.labelIds||{};}}catch(e){}},
-  save(){try{localStorage.setItem('sm-gmail',JSON.stringify({clientId:this.clientId,accounts:this.accounts.map(a=>({email:a.email,token:a.token,exp:a.exp,color:a.color,id:a.id})),labelIds:this.labelIds}));}catch(e){}},
+  load(){try{const d=JSON.parse(localStorage.getItem('sm-gmail')||'null');if(d){this.clientId=d.clientId||'';this.clientSecret=d.clientSecret||'';this.accounts=d.accounts||[];this.labelIds=d.labelIds||{};}}catch(e){}},
+  save(){try{localStorage.setItem('sm-gmail',JSON.stringify({clientId:this.clientId,clientSecret:this.clientSecret,accounts:this.accounts.map(a=>({email:a.email,token:a.token,exp:a.exp,color:a.color,id:a.id,rtk:a.rtk||''})),labelIds:this.labelIds}));}catch(e){}},
   gsi(){return new Promise((res,rej)=>{if(window.google&&google.accounts)return res();const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.onload=res;s.onerror=()=>rej(new Error('Could not load Google sign-in. Check your internet connection.'));document.head.appendChild(s);});},
   SCOPES:'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/userinfo.email openid',
   async token(hint,interactive){
@@ -3974,6 +4009,37 @@ const Gmail={
   // closes by itself. Chrome only allows that window after a click, unless
   // pop-ups are allowed for SmartMail, so: renew on a timer when we can, on
   // your next click when we can't, and pause downloads (nothing lost) until then.
+  // ---- Background sign-in: a long-lasting pass per account, renewed silently with no Google window ----
+  async codeFor(email){
+    await this.gsi();
+    return new Promise((res,rej)=>{
+      const cc=google.accounts.oauth2.initCodeClient({client_id:this.clientId,scope:this.SCOPES,ux_mode:'popup',login_hint:email||undefined,select_account:!email,
+        callback:r=>{if(r&&r.code)res(r.code);else rej(new Error((r&&r.error_description)||r&&r.error||'Sign-in was cancelled'));},
+        error_callback:e=>{const x=new Error(e&&e.message||'Sign-in window was closed');x.popup=e&&/popup/i.test((e.type||'')+' '+(e.message||''));rej(x);}});
+      cc.requestCode();
+    });
+  },
+  async tokenPost(params){
+    let r;try{r=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(params).toString()});}
+    catch(e){const x=new Error('Could not reach Google’s sign-in server');x.network=true;throw x;}
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.access_token){const x=new Error(j.error_description||j.error||('Google said '+r.status));x.grant=j.error==='invalid_grant';x.client=/client/i.test(j.error||'');throw x;}
+    return j;
+  },
+  async enableSilent(acc){
+    if(!this.clientSecret)throw new Error('Paste the client secret first');
+    const code=await this.codeFor(acc.email);
+    const j=await this.tokenPost({code,client_id:this.clientId,client_secret:this.clientSecret,redirect_uri:'postmessage',grant_type:'authorization_code'});
+    const who=await this.whoIs(j.access_token);
+    if(who&&who!==acc.email)throw new Error('Google signed in as '+who+' instead of '+acc.email+'. Pick '+acc.email+' in Google’s window');
+    if(!j.refresh_token)throw new Error('Google did not hand over a long-lasting pass. Open Google account → Apps with access, remove SmartMail, then try again');
+    acc.rtk=j.refresh_token;acc.token=j.access_token;acc.exp=Date.now()+(j.expires_in||3600)*1000-60000;acc.needsTap=false;acc.needsInteractive=false;acc.authErr='';
+    this.save();this.paintAuth();setTimeout(()=>{this.resumeAll();this.flushPending();},50);return true;
+  },
+  async silentRenew(acc){
+    const j=await this.tokenPost({refresh_token:acc.rtk,client_id:this.clientId,client_secret:this.clientSecret,grant_type:'refresh_token'});
+    return {token:j.access_token,exp:Date.now()+(j.expires_in||3600)*1000-60000};
+  },
   // Make sure a pass really belongs to this account (with several Google accounts in Chrome, Google can hand back the wrong one)
   async whoIs(token){try{const r=await fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+token}});const j=await r.json();return (j.email||'').toLowerCase();}catch(e){return '';}},
   async ensureToken(acc,auto,interactive){
@@ -3981,10 +4047,16 @@ const Gmail={
     if(acc._refreshing)return acc._refreshing;
     acc._refreshing=(async()=>{
       try{
-        const t=await this.token(acc.email,!!interactive);
+        let t=null;
+        if(acc.rtk&&this.clientSecret&&!interactive){
+          try{t=await this.silentRenew(acc);}
+          catch(e){if(e.grant){acc.rtk='';this.save();toast('Background sign-in ended for '+acc.email,'bell','Google expired it. Click the bar to sign in again (once).');}else if(!e.network)throw e;}
+        }
+        if(!t&&interactive&&this.clientSecret){await this.enableSilent(acc);return true;}
+        if(!t)t=await this.token(acc.email,!!interactive);
         const who=await this.whoIs(t.token);
         if(who&&who!==acc.email){const x=new Error('Google signed in as '+who+' instead of '+acc.email);x.wrong=true;throw x;}
-        Object.assign(acc,t);acc.needsTap=false;acc.needsInteractive=false;acc.authErr='';this.save();if(auto)this.setAuto(true);this.paintAuth();setTimeout(()=>this.resumeAll(),50);return true;}
+        Object.assign(acc,t);acc.needsTap=false;acc.needsInteractive=false;acc.authErr='';this.save();if(auto)this.setAuto(true);this.paintAuth();setTimeout(()=>{this.resumeAll();this.flushPending();},50);if($('stayWrap'))openStaySignedIn();return true;}
       catch(e){acc.needsTap=true;acc.authErr=e.message||'';if(!e.popup)acc.needsInteractive=true;if(auto&&e.popup)this.setAuto(false);this.paintAuth();
         if(interactive&&!e.popup)toast('Could not reconnect '+acc.email,'bell',(e.message||'')+'. In Google’s window, choose '+acc.email+'.');
         if(e.popup&&interactive)toast('Chrome blocked Google’s window','bell','Allow pop-ups for SmartMail: ⋮ → Site settings → Pop-ups and redirects → Allow, then click the bar again.');
@@ -3995,25 +4067,56 @@ const Gmail={
   },
   gestureRefresh(ev){
     if(ev&&ev.target&&ev.target.closest&&ev.target.closest('#authPill'))return; // the bar handles its own click
-    const acc=this.accounts.find(a=>!a.needsInteractive&&(a.needsTap||Date.now()>a.exp-10*60000));
+    const acc=this.accounts.find(a=>!a.rtk&&!a.needsInteractive&&(a.needsTap||Date.now()>a.exp-10*60000));
     if(!acc||acc._refreshing||Date.now()-(this._lastG||0)<15000)return;
     this._lastG=Date.now();acc.exp=0;this.ensureToken(acc);
   },
   keepAlive(){
     clearInterval(this._ka);
-    this._ka=setInterval(()=>{this.accounts.forEach(a=>{if(!a.needsTap&&Date.now()>a.exp-5*60000)this.ensureToken(a,true);});},60000);
+    this._ka=setInterval(()=>{this.accounts.forEach(a=>{if(Date.now()<=a.exp-5*60000)return;if(a.rtk)this.ensureToken(a,false);else if(!a.needsTap&&this.autoState()!=='no')this.ensureToken(a,true);else if(!a.needsTap){a.needsTap=true;this.paintAuth();}});},60000);
   },
   autoState(){try{return localStorage.getItem('sm-autorenew');}catch(e){return null;}},
   setAuto(ok){try{localStorage.setItem('sm-autorenew',ok?'yes':'no');}catch(e){}},
+  // Done/Junk/Spam/Bin -> Active right now; Gmail is told for each account as soon as that account is connected
+  sweepNow(){
+    let done=false;try{done=!!localStorage.getItem('sm-reset-3');}catch(e){}if(done||!this.on)return;
+    try{localStorage.setItem('sm-reset-3','1');localStorage.setItem('sm-reset-2','1');}catch(e){}
+    const moved=[];EMAILS.forEach(m=>{if(!m.me&&m.state!=='active'){moved.push(m);m.state='active';m.triaged=false;const k=senderKey(m);SORTED_SENDERS.delete(k);delete AUTO_RULES[k];}});
+    if(!moved.length)return;
+    const by={};moved.forEach(m=>{if(m.gid)(by[m.account]=by[m.account]||[]).push([m.gid,m.gtrash?1:0]);});
+    for(const a in by){try{const prev=JSON.parse(localStorage.getItem('sm-pend-'+a)||'[]');localStorage.setItem('sm-pend-'+a,JSON.stringify(prev.concat(by[a])));}catch(e){}}
+    Store.putMany(moved.filter(m=>m.gid)).catch(()=>{});
+    invalidateThreads();saveState();renderAll();
+    toast(moved.length.toLocaleString()+' emails moved into Active','inbox','Everything from Done, Junk, Spam and Bin. Your Apple Mail inbox is unchanged. Time to Speed sort.','',null,null,12000);
+    this.flushPending();
+  },
+  async flushPending(){
+    for(const acc of this.accounts){
+      if(acc.needsTap||!acc.token||Date.now()>acc.exp-30000)continue;
+      let list=[];try{list=JSON.parse(localStorage.getItem('sm-pend-'+acc.id)||'[]');}catch(e){}if(!list.length)continue;
+      const msgs=list.map(([gid,gt])=>EMAILS.find(e=>e.account===acc.id&&e.gid===gid)).filter(Boolean);
+      try{await this.clearSmartLabels(msgs);const gt=msgs.filter((m,i)=>list[i]&&list[i][1]);await this.unspamUntrash(msgs.filter(m=>list.find(x=>x[0]===m.gid&&x[1])));msgs.forEach(m=>{m.gtrash=false;});localStorage.removeItem('sm-pend-'+acc.id);Store.putMany(msgs).catch(()=>{});}catch(e){}
+    }
+  },
+  async sweepAll(){
+    try{localStorage.setItem('sm-reset-2','1');}catch(e){}
+    if(SORTED_SENDERS.size||Object.keys(AUTO_RULES).length)return; // you've started sorting: leave your work alone
+    const list=EMAILS.filter(e=>!e.me&&e.state!=='active');if(!list.length)return;
+    const n=await moveToActiveQuiet(list,'',true);
+    if(n)toast(n.toLocaleString()+' emails moved into Active','inbox','Everything from Done, Junk, Spam and Bin, as asked. Your Apple Mail inbox is unchanged. Time to Speed sort.','',null,null,12000);
+  },
   maybeReset(){
+    this.sweepNow();this.flushPending();
     let done=false;try{done=!!localStorage.getItem('sm-reset-1');}catch(e){}
+    let done2=false;try{done2=!!localStorage.getItem('sm-reset-2');}catch(e){}
+    if(done&&!done2&&!this._sweeping&&this.on&&!this.accounts.some(a=>a.needsTap||!a.token||Date.now()>a.exp-30000)){this._sweeping=true;setTimeout(()=>this.sweepAll(),1500);}
     if(done||!this.on){this._resetPending=false;return;}
     this._resetPending=true;
     if(this.accounts.some(a=>a.needsTap||!a.token||Date.now()>a.exp-30000))return; // waits until Gmail is connected, then runs from resumeAll
     this._resetPending=false;setTimeout(()=>resetSorting('auto'),800);
   },
   resumeAll(){
-    if(this._resetPending)this.maybeReset();
+    this.maybeReset();
     this.accounts.forEach(a=>{if(a.needsTap)return;const S=this.sync[a.id];if(!S||(!S.done&&!S.running))this.backfill(a);});
     this.refresh();
   },
@@ -4021,10 +4124,10 @@ const Gmail={
     const need=this.accounts.filter(a=>a.needsTap);let el=$('authPill');
     if(!need.length){if(el)el.remove();return;}
     if(!el){el=document.createElement('button');el.id='authPill';el.className='auth-pill';el.dataset.tip='Paused|Google asks SmartMail to confirm you are still signed in every hour. Click to carry on. To make this automatic, allow pop-ups for SmartMail (Settings → Connect Gmail explains how).';document.body.appendChild(el);
-      el.onclick=()=>{const a=this.accounts.find(x=>x.needsTap);if(a){a.exp=0;el.classList.add('busy');this.ensureToken(a,false,a.needsInteractive).finally(()=>el.classList.remove('busy'));}};}
+      el.onclick=()=>openStaySignedIn();}
     const a=need[0];const more=need.length>1?` (+${need.length-1} more)`:'';
-    el.innerHTML=`<span class="auth-dot"></span>${a.needsInteractive?'Sign in to '+esc(a.email)+' again':'Click to reconnect '+esc(a.email)}${more}`;
-    el.dataset.tip=(a.needsInteractive?'Sign in again|Google needs you to confirm this account. A Google window opens: pick '+a.email+' and press Continue.':'Reconnect|Google asks SmartMail to confirm you are still signed in every hour. Click to carry on.')+(a.authErr?' (Google said: '+a.authErr+')':'');
+    el.innerHTML=`<span class="auth-dot"></span>${need.length>1?need.length+' accounts need reconnecting':esc(a.email)+' needs reconnecting'} · Fix it for good`;
+    el.dataset.tip='Reconnect|Click to reconnect now, or set it up once so it never asks again.'+(a.authErr?' (Google said: '+a.authErr+')':'');
   },
   async addAccount(){
     if(!this.clientId){toast('Paste your Google Client ID first','bell','Settings → Connect Gmail');return;}
@@ -4128,6 +4231,7 @@ const Gmail={
   },
   // Re-work out every email's box from Gmail's labels, without changing anything in Gmail.
   async resyncStates(acc){
+    try{if(JSON.parse(localStorage.getItem('sm-pend-'+acc.id)||'[]').length)return {changed:0,toActive:0};}catch(e){}
     const L=this.labelIds[acc.email]||{};
     const want=['INBOX','SENT','SPAM','TRASH',L.Done,L.Junk,L.Spam,L.Bin].filter(Boolean);
     const has=new Map();
@@ -4371,6 +4475,16 @@ const Gmail={
       }
     }
   },
+  // take emails out of Gmail's own Spam and Bin (they land in All Mail, not your Apple Mail inbox)
+  async unspamUntrash(msgs){
+    const by={};msgs.forEach(m=>{if(m.gid&&m.account)(by[m.account]=by[m.account]||[]).push(m);});
+    for(const accId in by){const acc=this.accounts.find(a=>a.id===accId);if(!acc)continue;
+      this.touch(by[accId].map(m=>m.gid));
+      const ids=by[accId].map(m=>m.gid);
+      for(let i=0;i<ids.length;i+=1000){try{await this.api(acc,'messages/batchModify',{method:'POST',body:JSON.stringify({ids:ids.slice(i,i+1000),removeLabelIds:['SPAM']}),prio:true});}catch(e){}}
+      for(const id of ids){try{await this.api(acc,'messages/'+id+'/untrash',{method:'POST',prio:true});}catch(e){}}
+    }
+  },
   touch(gids){const t=Date.now();this._touched=this._touched||new Map();gids.forEach(g=>this._touched.set(g,t));},
   touchedRecently(g){const t=this._touched&&this._touched.get(g);return t&&Date.now()-t<15*60000;},
   async bulkState(msgs,s){
@@ -4520,7 +4634,7 @@ $('triageOpen').innerHTML=ic('sparkle',12)+' Sort Mail';$('triageOpen').dataset.
 $('triageOpen').onclick=openTriage;
 $('newGroupBtn').innerHTML=ic('plus',13);$('newGroupBtn').onclick=()=>groupEditor(null);
 $('bulkOpen').innerHTML=ic('layers',12)+' Bulk sort';$('bulkOpen').onclick=openBulk;
-document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#doneToActive')){const l=scopeList().filter(e=>e.state==='done');if(confirm('Move all '+l.length.toLocaleString()+' Done emails back to Active?\n\nOnly SmartMail changes: your Gmail and Apple Mail inboxes stay as they are. Undo is available.'))moveToActiveQuiet(l);}if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();if(ev.target.closest&&ev.target.closest('#speedBannerGo'))openSpeed();});
+document.addEventListener('click',ev=>{if(ev.target.closest&&ev.target.closest('#doneToActive')){const f=state.listFilter;const l=scopeList().filter(e=>e.state===f);if(confirm('Move all '+l.length.toLocaleString()+' '+DEST_LABEL[f]+' emails back to Active?\n\nOnly SmartMail changes: your Gmail and Apple Mail inboxes stay as they are. Undo is available.'))moveToActiveQuiet(l);}if(ev.target.closest&&ev.target.closest('#bulkBannerGo'))openBulk();if(ev.target.closest&&ev.target.closest('#speedBannerGo'))openSpeed();});
 document.addEventListener('keydown',ev=>{if(BULK.open&&ev.key==='Escape'){ev.stopPropagation();ev.preventDefault();closeBulk();}},true);
 $('composeNew').innerHTML=ic('pencil',12)+' New';$('composeNew').dataset.tip='New|Write a new email, or describe it and let it be drafted for you.';
 $('composeNew').onclick=()=>{if(state.view.type==='notes'){const i=$('noteInput');if(i){i.focus();return;}}state.selected=null;$('reader').classList.remove('open');openCompose(null);};
@@ -4700,6 +4814,8 @@ function renderSettings(){
       ${Gmail.on?row('Connected','SmartMail is talking to Gmail directly from this device. Nothing passes through any other server.','<span class="chip" style="background:rgba(48,177,92,.12);color:var(--ok)">Live</span>'):row('Not connected yet','Google needs to know this app exists before it will share your mail. That takes a Client ID, which you create once in Google Cloud. Paste it here, then Add account.','<span class="chip">Demo</span>')}
       <div class="set-row"><div class="sr-main"><div class="sr-title">Google Client ID</div><div class="sr-sub">Looks like 1234567890-abc123.apps.googleusercontent.com</div></div></div>
       <div class="add-acct open"><input id="clientIdInput" value="${esc(Gmail.clientId)}" placeholder="Paste your Client ID"><button class="set-btn primary" id="clientIdSave">Save</button></div>
+      ${Gmail.on?`<div class="set-row"><div class="sr-main"><div class="sr-title">Stay signed in without pop-ups</div><div class="sr-sub">Stops Google’s little window flashing up every hour. Needs your client secret once (Google Cloud → Google Auth Platform → Clients → SmartMail → <b>Add secret</b>, then copy it). It is kept only on this Mac. ${Gmail.accounts.map(a=>esc(a.email.split('@')[0])+': <b style="color:'+(a.rtk?'#1f9d47':'#c25e00')+'">'+(a.rtk?'on':'off')+'</b>').join(' · ')}</div></div></div>
+      <div class="add-acct open"><input id="secretInput" type="password" value="${esc(Gmail.clientSecret)}" placeholder="Paste client secret (starts GOCSPX-)"><button class="set-btn" id="secretSave">Save</button><button class="set-btn primary" id="silentOn" ${Gmail.clientSecret?'':'disabled'}>Turn on for ${Gmail.accounts.filter(a=>!a.rtk).length||'all'} account${Gmail.accounts.filter(a=>!a.rtk).length===1?'':'s'}</button></div>`:''}
       ${Gmail.on?'':`<div class="set-row"><div class="sr-main"><div class="sr-sub"><b>How to get one (about 15 minutes, free):</b><br>1. Go to console.cloud.google.com and sign in with your main Google account.<br>2. Top left, project dropdown → New project → name it SmartMail → Create.<br>3. Menu → APIs & Services → Library → search "Gmail API" → Enable.<br>4. APIs & Services → OAuth consent screen → External → fill in the app name (SmartMail) and your email → Save. Under Test users, add every Gmail address you want to connect.<br>5. APIs & Services → Credentials → Create credentials → OAuth client ID → Web application. Under Authorised JavaScript origins add <b>${esc(location.origin)}</b> → Create.<br>6. Copy the Client ID it shows you and paste it above.</div></div></div>`}
     </div>
     <div class="set-card"><h3>Accounts</h3>
@@ -4803,6 +4919,13 @@ function renderSettings(){
     renderAll();
   });
   P.querySelector('#addAcctBtn').onclick=()=>{if(Gmail.clientId){Gmail.addAccount().then(()=>renderSettings()).catch(err=>toast('Could not connect','bell',err.message,null,null,null,9000));return;}const f=P.querySelector('#addAcct');f.classList.toggle('open');if(f.classList.contains('open'))P.querySelector('#addAcctInput').focus();};
+  const ss=P.querySelector('#secretSave');if(ss)ss.onclick=()=>{Gmail.clientSecret=P.querySelector('#secretInput').value.trim();Gmail.save();toast(Gmail.clientSecret?'Secret saved on this Mac':'Secret cleared','tick',Gmail.clientSecret?'Now press Turn on.':'');renderSettings();};
+  const silentBtn=P.querySelector('#silentOn');if(silentBtn)silentBtn.onclick=async()=>{
+    const so=silentBtn;so.disabled=true;let ok=0;
+    for(const a of Gmail.accounts){if(a.rtk)continue;so.textContent='Waiting for Google: '+a.email;
+      try{await Gmail.enableSilent(a);ok++;}catch(e){toast('Could not turn it on for '+a.email,'bell',e.message+(e.network?'. Your browser blocked Google’s sign-in server, so SmartMail keeps using the window method.':''));if(e.network||e.client)break;}}
+    if(ok)toast('Background sign-in on for '+ok+' account'+(ok===1?'':'s'),'tick','No more Google windows every hour.');
+    renderSettings();};
   P.querySelector('#clientIdSave').onclick=()=>{Gmail.clientId=P.querySelector('#clientIdInput').value.trim();Gmail.save();toast(Gmail.clientId?'Client ID saved':'Client ID cleared','tick',Gmail.clientId?'Now press Add account to connect your first Gmail.':'');renderSettings();};
   P.querySelector('#addAcctGo').onclick=()=>{
     const v=P.querySelector('#addAcctInput').value.trim();
