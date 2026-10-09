@@ -2029,8 +2029,10 @@ function renderSeg(){
   if(v.type==='notes'||v.type==='reply'||v.type==='drafts'||v.type==='sent'||v.type==='people'){seg.hidden=true;return;}
   seg.hidden=false;
   const base=scopeList();
-  const counts={active:0,done:0,junk:0,spam:0,bin:0};
-  base.forEach(e=>{if(counts[e.state]!==undefined)counts[e.state]++;});
+  let counts={active:0,done:0,junk:0,spam:0,bin:0};
+  const scS=savedCounts();
+  if(scS&&scS.seg&&v.type==='inbox'&&!state.search)counts=Object.assign(counts,scS.seg[state.account]||{});
+  else base.forEach(e=>{if(counts[e.state]!==undefined)counts[e.state]++;});
   $('segItems').innerHTML=[['active','Active'],['done','Done'],['junk','Junk'],['spam','Spam'],['bin','Bin']].map(([k,lab])=>
     `<button class="${state.listFilter===k?'on':''}" data-seg="${k}" role="tab" aria-selected="${state.listFilter===k}" data-tip="${TIPS[k]}">${lab}${counts[k]?`<span class="seg-n">${counts[k]}</span>`:''}</button>`).join('');
   seg.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{state.listFilter=b.dataset.seg;renderList();});
@@ -2077,8 +2079,9 @@ function renderListInner(){
   const isBin=state.listFilter==='bin'&&state.view.type!=='reply';
   if(isBin)BINSEL.list=list;
   const binBar=isBin?binBarHtml(list):'';
-  const actN=state.listFilter==='active'&&state.view.type==='inbox'&&!state.search?EMAILS.filter(m=>m.state==='active'&&!m.me&&(state.account==='all'||m.account===state.account)).length:0;
-  const unsortedS=(Gmail.on&&state.view.type==='inbox'&&!state.search&&state.listFilter==='active')?speedUnsortedCount():0;
+  const scB=savedCounts();
+  const actN=scB?0:state.listFilter==='active'&&state.view.type==='inbox'&&!state.search?EMAILS.filter(m=>m.state==='active'&&!m.me&&(state.account==='all'||m.account===state.account)).length:0;
+  const unsortedS=(Gmail.on&&state.view.type==='inbox'&&!state.search&&state.listFilter==='active')?(scB?((scB.uns||{})[state.account]||0):speedUnsortedCount()):0;
   const bulkBanner=(unsortedS>=20||actN>=100)?`<div class="bulk-banner"><span class="bb-ico">${ic('bolt',18)}</span><span class="bb-txt"><b>${unsortedS?unsortedS.toLocaleString()+' senders to sort':actN.toLocaleString()+' emails waiting in Active'}</b><span>Speed sort: one sender at a time, one key each. Covers every email from them, Active or Done.</span></span><button class="set-btn primary" id="speedBannerGo">Speed sort</button><button class="set-btn" id="bulkBannerGo">Table view</button></div>`:'';
   const mvF=['done','spam','bin','junk'].includes(state.listFilter)&&!state.search?state.listFilter:null;const doneN=mvF?scopeList().filter(x=>x.state===mvF).length:0;
   const doneBanner=doneN?`<div class="bulk-banner"><span class="bb-ico" style="background:${mvF==='done'?'#34c759':'#ff9500'}">${ic(mvF==='done'?'tick':mvF==='bin'?'bin':mvF==='spam'?'spam':'trash',18)}</span><span class="bb-txt"><b>${doneN.toLocaleString()} in ${DEST_LABEL[mvF]}</b><span>${mvF==='spam'?'Includes mail Gmail itself flagged as spam, so some may be scams. ':''}Move them all to Active and Speed sort them. Your Apple Mail inbox is not changed.</span></span><button class="set-btn primary" id="doneToActive">Move all to Active</button></div>`:'';
@@ -5040,11 +5043,17 @@ document.fonts&&document.fonts.ready&&document.fonts.ready.then(placeAll);
 /* ============ REMEMBER YOUR OWN DATA BETWEEN VISITS (settings, signatures, notes, drafts, rules, groups, what the sorter learned) ============ */
 const SAVE_KEY='smartmail-proto-v1';
 function liveCounts(){
-  const c={acct:{all:0},inbox:{all:0},badge:0};
-  ACCOUNTS.forEach(a=>{c.acct[a.id]=0;c.inbox[a.id]=0;});
-  for(const e of EMAILS){if(e.state!=='active'||!e.unread)continue;
+  const c={acct:{all:0},inbox:{all:0},badge:0,seg:{},uns:{}};
+  const z=()=>({active:0,done:0,junk:0,spam:0,bin:0});c.seg.all=z();
+  ACCOUNTS.forEach(a=>{c.acct[a.id]=0;c.inbox[a.id]=0;c.seg[a.id]=z();});
+  const us={all:new Set()};
+  for(const e of EMAILS){
+    if(!e.me){const g=c.seg[e.account]||(c.seg[e.account]=z());if(g[e.state]!==undefined){g[e.state]++;c.seg.all[e.state]++;}
+      const k=senderKey(e);if(!SORTED_SENDERS.has(k)){us.all.add(k);(us[e.account]||(us[e.account]=new Set())).add(k);}}
+    if(e.state!=='active'||!e.unread)continue;
     c.acct.all++;c.acct[e.account]=(c.acct[e.account]||0)+1;
     if(!e.me){c.inbox.all++;c.inbox[e.account]=(c.inbox[e.account]||0)+1;if(PREFS.acctNotif[e.account]!==false)c.badge++;}}
+  for(const a in us)c.uns[a]=us[a].size;
   return c;
 }
 let SNAPC=null;try{SNAPC=JSON.parse(localStorage.getItem('sm-snapc')||'null');}catch(e){}
@@ -5085,7 +5094,7 @@ document.addEventListener('click',()=>{clearTimeout(saveTimer);saveTimer=setTime
 
 // Real accounts: never flash the demo. Show the last-seen inbox instantly while the full copy opens.
 Gmail.load();
-if(Gmail.on){EMAILS.length=0;Gmail.syncAccountsList();Gmail.loadingLocal=true;try{(JSON.parse(localStorage.getItem('sm-snap')||'[]')).forEach(e=>EMAILS.push(mk(e)));}catch(e){}}
+if(Gmail.on){const sf0=$('simFloat');if(sf0)sf0.remove();EMAILS.length=0;Gmail.syncAccountsList();Gmail.loadingLocal=true;try{(JSON.parse(localStorage.getItem('sm-snap')||'[]')).forEach(e=>EMAILS.push(mk(e)));}catch(e){}}
 renderAll();
 document.addEventListener('pointerdown',ev=>{if(Gmail.on)Gmail.gestureRefresh(ev);},true);
 document.addEventListener('keydown',()=>{if(Gmail.on)Gmail.gestureRefresh();},true);
