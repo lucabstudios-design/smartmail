@@ -1130,6 +1130,16 @@ h1,h2,h3,.list-title,.r-subject,.set-head h2,.logo-btn .l-text,.logo-btn .l-set,
 .stay-list{display:flex;flex-direction:column;gap:6px;margin:4px 0 6px 36px}
 .stay-acct{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:var(--subtle)}
 .sa-mail{flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Floating bubbles (send checks, toasts, menus): still frosted glass, but solid enough to read over anything */
+:root{--float:rgba(250,251,253,.975)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--float:rgba(30,33,40,.965)}}
+:root[data-theme="dark"]{--float:rgba(30,33,40,.965)}
+.ask-card,.toast,.gist-pop,.pop-menu{background:var(--float)!important;backdrop-filter:blur(30px) saturate(1.6)!important;-webkit-backdrop-filter:blur(30px) saturate(1.6)!important}
+.chk{background:rgba(120,130,150,.1)}
+.chk.warn{background:rgba(255,159,10,.16)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chk.warn{color:#ffc35c}:root:not([data-theme="light"]) .chk.bad{color:#ff8a80}}
+:root[data-theme="dark"] .chk.warn{color:#ffc35c}:root[data-theme="dark"] .chk.bad{color:#ff8a80}
 </style>
 
 <div class="app" id="app">
@@ -1553,6 +1563,9 @@ function groupOf0(e){
   return isPersonalDomain(e.domain)?'People':senderOf(e).group;
 }
 function allGroups(){return [...BASE_GROUPS,...CUSTOM_GROUPS];}
+function normAddr(a){a=(a||'').trim().toLowerCase();const i=a.lastIndexOf('@');if(i<0)return a;let u=a.slice(0,i),d=a.slice(i+1);if(d==='gmail.com'||d==='googlemail.com'){u=u.split('+')[0].replace(/\./g,'');d='gmail.com';}return u+'@'+d;}
+function sameAddr(a,b){return !!a&&!!b&&normAddr(a)===normAddr(b);}
+function addrList(s){return (String(s||'').match(/[^\s<>,;"']+@[^\s<>,;"']+/g)||[]);}
 function inAccount(e){return state.account==='all'||e.account===state.account;}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
@@ -3278,7 +3291,7 @@ function renderSentList(){
       </span></div>`).join(''):'';
   // everything you've sent from any app (Apple Mail, phone, Gmail), straight from Gmail
   const gids=new Set(SENT.map(d=>d.gid).filter(Boolean));
-  let mine=EMAILS.filter(e=>e.me&&e.gid&&!gids.has(e.gid)&&(state.account==='all'||e.account===state.account));
+  let mine=EMAILS.filter(e=>(e.me||e.self)&&e.gid&&!gids.has(e.gid)&&(state.account==='all'||e.account===state.account));
   if(state.search){const q=state.search.toLowerCase();mine=mine.filter(e=>((e.to||'')+' '+e.subject+' '+(e.snippet||'')).toLowerCase().includes(q));}
   mine.sort((a,b)=>(b.ts||0)-(a.ts||0));const SL=state.sentLimit||80;
   const gHtml=mine.slice(0,SL).map(e=>`<div class="mail-item read" data-open="${e.id}" role="button" tabindex="0"><span class="m-avatar" style="background:${avBg(e.to,e.to)}">${initials(shortAddrs(e.to)||'?')}</span><span class="m-main"><span class="m-top"><span class="m-from">To: ${esc(shortAddrs(e.to)||'')}</span><span class="m-time">${esc(e.day===e.time?e.day:e.day||'')}</span></span><span class="m-subj">${esc(e.subject||'(no subject)')}</span><span class="m-snip">${esc(e.snippet||'')}</span></span></div>`).join('');
@@ -4330,11 +4343,15 @@ const Gmail={
   },
   toEmail(acc,m){
     const H={};(m.payload&&m.payload.headers||[]).forEach(h=>H[h.name.toLowerCase()]=h.value);
-    const from=this.parseAddr(H.from);const me=from.email===acc.email;
-    const labels=m.labelIds||[];const L=this.labelIds[acc.email]||{};
+    const from=this.parseAddr(H.from);const labels=m.labelIds||[];
+    const mine=sameAddr(from.email,acc.email);
+    // an email you send yourself lands in your inbox too (as in Gmail and Apple Mail): treat it as received
+    const self=mine&&labels.includes('INBOX')&&addrList((H.to||'')+','+(H.cc||'')).some(a=>sameAddr(a,acc.email));
+    const me=mine&&!self;
+    const L=this.labelIds[acc.email]||{};
     const t=this.fmtTime(+m.internalDate);
     const body=this.bodyOf(m.payload);
-    const e={gid:m.id,thread:'g:'+m.threadId,msgId:H['message-id']||'',account:acc.id,me,domain:from.email.split('@')[1]||'',fromName:me?'Luca':from.name,fromEmail:from.email,
+    const e={gid:m.id,thread:'g:'+m.threadId,msgId:H['message-id']||'',account:acc.id,me,self,domain:from.email.split('@')[1]||'',fromName:me?'Luca':from.name,fromEmail:from.email,
       to:(H.to||''),subject:H.subject||'(no subject)',time:t.time,day:t.day,ts:+m.internalDate,
       snippet:(m.snippet||'').replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&'),body:body.length?body:[m.snippet||''],
       state:this.stateFromLabels(acc,labels),gtrash:labels.includes('TRASH')||labels.includes('SPAM'),flagged:labels.includes('STARRED'),triaged:labels.includes(L.Sorted)||!labels.includes('INBOX'),
@@ -4363,6 +4380,12 @@ const Gmail={
     }catch(err){if(/404|not found|historyId/i.test(err.message)){await Store.setMeta(hidKey,null);return null;}throw err;}
     await Store.setMeta(hidKey,latest);
     return {added:[...added],changed:[...changed],labels};
+  },
+  async recheckSelf(list){
+    for(const e of list.slice(0,200)){const acc=this.accFor(e);if(!acc||acc.needsTap)continue;
+      try{const m=await this.api(acc,'messages/'+e.gid+'?format=minimal');const L=m.labelIds||[];
+        if(!L.includes('INBOX')){e.self=false;e.me=true;}else e.state=this.stateFromLabels(acc,L);Store.mark&&Store.mark(e);}catch(err){}}
+    Store.putMany(list).catch(()=>{});invalidateThreads();renderAll();
   },
   async fetchAccount(acc,initial){
     this._dirty=false;
@@ -4618,7 +4641,7 @@ const Gmail={
   start(){
     if(!this.on)return;
     clearInterval(this._st);this._st=setInterval(()=>this.paintStatus(),10000);this.paintStatus();
-    clearInterval(this.pollTimer);this.pollTimer=setInterval(()=>this.refresh(),45000);
+    clearInterval(this.pollTimer);this.pollTimer=setInterval(()=>{const gap=document.hidden?60000:12000;if(!this.lastCheck||Date.now()-this.lastCheck>=gap-500)this.refresh();},4000);
     if(!this._wired){this._wired=true;
       const soon=()=>{if(!this.lastCheck||Date.now()-this.lastCheck>15000)this.refresh();};
       document.addEventListener('visibilitychange',()=>{if(!document.hidden)soon();});
@@ -4629,7 +4652,9 @@ const Gmail={
     if(!this.on)return false;
     this.syncAccountsList();
     this.loadingLocal=true;renderAll();
-    try{const saved=await Store.all();EMAILS.length=0;const ids=new Set(this.accounts.map(a=>a.id));saved.filter(e=>ids.has(e.account)).forEach(e=>EMAILS.push(mk(e)));EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));}catch(e){console.warn('store',e);}
+    try{const saved=await Store.all();EMAILS.length=0;const ids=new Set(this.accounts.map(a=>a.id));saved.filter(e=>ids.has(e.account)).forEach(e=>EMAILS.push(mk(e)));
+      const selfFix=[];EMAILS.forEach(e=>{if(!e.me||e.self||!e.gid)return;const acc=this.accounts.find(a=>a.id===e.account);if(acc&&addrList((e.to||'')+','+(e.cc||'')).some(a=>sameAddr(a,acc.email))){e.me=false;e.self=true;if(e.fromName==='Luca')e.fromName=PREFS.myName||'Luca';selfFix.push(e);}});
+      if(selfFix.length){Store.putMany(selfFix).catch(()=>{});setTimeout(()=>this.recheckSelf(selfFix),4000);}EMAILS.sort((a,b)=>(b.ts||0)-(a.ts||0));}catch(e){console.warn('store',e);}
     this.loadingLocal=false;renderAll();saveSnapshot();this.keepAlive();
     for(const acc of this.accounts){
       try{if(!this.labelIds[acc.email])await this.ensureLabels(acc);await this.fetchAccount(acc,true);this.lastCheck=Date.now();}
